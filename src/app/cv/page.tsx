@@ -72,7 +72,7 @@ export default function CVPage() {
             <strong>Singh, D. K.</strong>, Chen, Y.; Authors: Kudyshev, Z., Bogdanov, S., Isacsson, T., Kildishev, A., Boltasseva, A., Shalaev, V. (2023).
             Rapid Classification of Quantum Sources Enabled by Machine Learning. <em>Quantum Science Center All-Hands Meeting</em>, Nashville, TN.
           </li>
-          <li>See the <Link href="/publications">Publications</Link> page for the full list.</li>
+        <h4>See the <Link href="/publications">Publications</Link> page for the full list.</h4>
         </ul>
 
         <h2>Research Experience</h2>
