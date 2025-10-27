@@ -8,43 +8,49 @@ export type ResearchItem = {
 
 export const researchItems: ResearchItem[] = [
   {
-    title: "ML-assisted optical authentication (RAPTOR/PUF tamper detection)",
-    period: "2024–2025",
-    summary:
-      "Residual-attention pipelines and optical-response modeling for anti-counterfeiting and tamper detection on photonic/PUF systems.",
-    links: [
-      { label: "Nanophotonics 2025 (DOI)", href: "https://doi.org/10.1515/nanoph-2025-0049" },
-      { label: "SPIE 2024 (DOI)", href: "https://doi.org/10.1117/12.3027858" },
-      { label: "Advanced Photonics 2024 (DOI)", href: "https://doi.org/10.1117/1.ap.6.5.056002" },
-    ],
-    tags: ["ML", "security", "optics"],
-  },
-  {
-    title: "Metasurface design for single-photon emission (2D materials)",
+    title: "2D Single-Photon Metasurfaces",
     period: "Summer 2025",
     summary:
-      "Modeled metasurfaces to enhance emission from graphene/WSe2 emitters; integrated with fabrication (contacts, exfoliation/transfer) and optical characterization for cavity coupling.",
-    tags: ["metasurfaces", "2D materials", "quantum optics"],
+      "Modeled and simulated metasurfaces to enhance single-photon emission using 2D materials such as graphene and WSe₂. Integrated fabrication (EBL, gold contacts) and optical characterization for emitter–cavity coupling.",
+    tags: ["quantum optics", "2D materials", "metasurfaces"],
   },
   {
-    title: "Metalens design for neutral-atom control",
+    title: "CrSBr Spin-Injection Samples",
+    period: "Summer 2025",
+    summary:
+      "Fabricated gold contacts and performed exfoliation/transfer of monolayer CrSBr flakes. Conducted optical tests for spin-related emission and cavity coupling.",
+    tags: ["spin injection", "2D magnets", "fabrication"],
+  },
+  {
+    title: "Metalens Design for Neutral-Atom Control",
     period: "Summer 2024",
     summary:
-      "Designed/simulated metalenses for optical tweezers; explored photonic responses using RCWA-class solvers (GRCWA/S4).",
-    tags: ["metalenses", "neutral atoms", "simulation"],
+      "Designed and simulated metalenses for optical tweezer control in analog neutral-atom quantum computers. Modeled photonic responses using RCWA solvers (GRCWA/S4).",
+    tags: ["metalenses", "simulation", "quantum control"],
   },
   {
-    title: "TCSPC platform & PLD diagnostics",
+    title: "TCSPC Platform for Quantum Emitters",
     period: "SURF 2023",
     summary:
-      "Established a TCSPC setup (PL, g2 correlation) for quantum emitters; assisted PLD diagnostics with 200+ image frames and waveguide/TCO fabrication for group projects.",
-    tags: ["TCSPC", "PLD", "instrumentation"],
+      "Established a time-correlated single-photon counting (TCSPC) system performing PL and g² correlation measurements. Integrated optics, detectors, and software into a working characterization platform.",
+    tags: ["TCSPC", "instrumentation", "quantum emitters"],
   },
   {
-    title: "CrSBr spin-injection samples",
-    period: "Summer 2025",
+    title: "PLD Diagnostics and Thin-Film Optics",
+    period: "SURF 2023",
     summary:
-      "Fabricated Au contacts for CrSBr monolayer flakes; exfoliation/transfer across samples; optical tests for emitter–cavity coupling.",
-    tags: ["2D magnets", "spin injection"],
+      "Captured and analyzed 200+ diagnostic frames to assist in pulsed laser deposition (PLD) system repair. Fabricated thin-film transparent conducting oxides and waveguides for optical projects.",
+    tags: ["thin films", "PLD", "optical materials"],
+  },
+  {
+    title: "Machine-Learning Optical Authentication (RAPTOR)",
+    period: "2024–2025",
+    summary:
+      "Developed residual-attention ML pipelines and optical-response models for anti-counterfeiting and tamper detection in plasmonic PUF systems.",
+    links: [
+      { label: "Advanced Photonics 2024", href: "https://doi.org/10.1117/1.ap.6.5.056002" },
+      { label: "SPIE Photonic Computing 2024", href: "https://doi.org/10.1117/12.3027858" },
+    ],
+    tags: ["machine learning", "PUF", "security"],
   },
 ];

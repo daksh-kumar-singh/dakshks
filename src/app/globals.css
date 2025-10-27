@@ -2,44 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Theme tokens */
-:root{
+/* Purdue-inspired palette (approved colors only, no marks) */
+:root {
   --background: 0 0% 100%;
   --foreground: 222.2 47.4% 11.2%;
   --muted: 210 16% 96%;
   --muted-foreground: 215 16% 40%;
-
-  /* Purdue-inspired palette (colors only; no marks/logos) */
   --p-gold: 207 185 145; /* #CFB991 */
-  --p-black: 0 0 0;      /* #000000 */
-  --p-aged: 142 111 62;  /* #8E6F3E */
   --p-rush: 218 170 0;   /* #DAAA00 */
-  --p-field: 221 185 69; /* #DDB945 */
-  --p-dust: 235 217 159; /* #EBD99F */
-  --p-steel: 85 89 96;   /* #555960 */
-  --p-cool: 111 114 123; /* #6F727B */
   --p-rail: 157 151 149; /* #9D9795 */
-  --p-steam: 196 191 192;/* #C4BFC0 */
-}
-.dark{
-  --background: 222.2 47.4% 11.2%;
-  --foreground: 210 40% 98%;
-  --muted: 224 36% 15%;
-  --muted-foreground: 214 20% 75%;
+  --p-steel: 85 89 96;   /* #555960 */
 }
 
-html { scroll-behavior: smooth; }
-body { @apply bg-background text-foreground; }
+.dark {
+  --background: 0 0% 6%;     /* near black #0F0F0F */
+  --foreground: 0 0% 94%;    /* light gray text */
+  --muted: 0 0% 12%;
+  --muted-foreground: 0 0% 75%;
+}
 
-/* Uniform typography */
-.font-sans { font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif; }
-h1,h2,h3,h4 { @apply font-semibold; }
+html {
+  scroll-behavior: smooth;
+}
 
-/* Subtle brand accent */
-a { color: rgb(var(--p-rush)); }
-a:hover { text-decoration: underline; }
-.border-brand { border-color: rgb(var(--p-rail)); }
+body {
+  @apply bg-background text-foreground;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", sans-serif;
+}
+
+/* Typography and color harmonization */
+h1,
+h2,
+h3,
+h4 {
+  @apply font-semibold;
+  color: rgb(var(--p-rush));
+}
+
+a {
+  color: rgb(var(--p-rush));
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* Card and border color consistency */
+.border-brand {
+  border-color: rgb(var(--p-rail));
+}
 
 /* Prose refinements */
-.prose a { @apply underline underline-offset-4; }
-.prose img { @apply rounded-2xl; }
+.prose a {
+  @apply underline underline-offset-4;
+}
+.prose img {
+  @apply rounded-2xl;
+}
+
+/* Collapsible detail styling */
+details {
+  @apply border border-brand rounded-xl p-4 transition-all duration-200;
+  background-color: hsl(var(--muted) / 0.1);
+}
+details[open] {
+  @apply bg-transparent border-brand;
+}
+summary {
+  @apply cursor-pointer font-semibold text-lg list-none;
+  color: rgb(var(--p-rush));
+}
+summary::marker {
+  display: none;
+}
