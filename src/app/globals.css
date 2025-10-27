@@ -187,10 +187,14 @@ summary::marker { display: none; }
 @media (prefers-reduced-motion: reduce) { .bg-noise { display: none; } }
 
 /* Reveal on scroll */
+/* Reveal on scroll (reversible) */
+.reveal-base { transition: opacity 500ms ease, transform 500ms ease; will-change: opacity, transform; }
 .reveal-pending { opacity: 0; transform: translateY(8px); }
-.reveal-in { opacity: 1; transform: translateY(0); transition: opacity 500ms ease, transform 500ms ease; }
+.reveal-in { opacity: 1; transform: translateY(0); }
+
 @media (prefers-reduced-motion: reduce) {
-  .reveal-pending, .reveal-in { opacity: 1; transform: none; transition: none; }
+  .reveal-base { transition: none; }
+  .reveal-pending, .reveal-in { opacity: 1; transform: none; }
 }
 
 /* Ring wave animation for SVG circles */
