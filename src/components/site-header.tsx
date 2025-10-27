@@ -13,8 +13,25 @@ const NAV = [
 
 export default function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
-  // Close mobile menu on route change (hash change too)
+  /* ---------------- Theme persistence ---------------- */
+  useEffect(() => {
+    const stored = localStorage.getItem("theme") as "light" | "dark" | null;
+    const sysDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const initial = stored ?? (sysDark ? "dark" : "light");
+    setTheme(initial);
+    document.documentElement.classList.toggle("dark", initial === "dark");
+  }, []);
+
+  const toggleTheme = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    localStorage.setItem("theme", next);
+    document.documentElement.classList.toggle("dark", next === "dark");
+  };
+
+  /* ---------------- Menu behavior ---------------- */
   useEffect(() => {
     const close = () => setOpen(false);
     window.addEventListener("hashchange", close);
@@ -25,13 +42,8 @@ export default function SiteHeader() {
     };
   }, []);
 
-  // Lock body scroll when menu is open (mobile nicety)
   useEffect(() => {
-    if (open) {
-      document.documentElement.style.overflow = "hidden";
-    } else {
-      document.documentElement.style.overflow = "";
-    }
+    document.documentElement.style.overflow = open ? "hidden" : "";
     return () => {
       document.documentElement.style.overflow = "";
     };
@@ -42,7 +54,10 @@ export default function SiteHeader() {
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3">
         {/* Brand */}
         <div className="flex items-center gap-3">
-          <Link href="/" className="text-base font-semibold tracking-tight hover:opacity-90">
+          <Link
+            href="/"
+            className="text-base font-semibold tracking-tight hover:opacity-90"
+          >
             Daksh Kumar Singh
           </Link>
           <span className="hidden text-xs text-muted-foreground md:inline">
@@ -53,38 +68,76 @@ export default function SiteHeader() {
         {/* Desktop nav */}
         <nav className="hidden items-center gap-5 md:flex">
           {NAV.map((n) => (
-            <Link key={n.href} href={n.href} className="underline-offset-4 hover:underline">
+            <Link
+              key={n.href}
+              href={n.href}
+              className="underline-offset-4 hover:underline"
+            >
               {n.label}
             </Link>
           ))}
+          {/* Theme toggle */}
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle dark mode"
+            className="ml-3 flex h-8 w-8 items-center justify-center rounded-lg border border-brand hover:bg-muted transition-colors"
+          >
+            {theme === "dark" ? (
+              <span className="text-lg" role="img" aria-label="Light mode">
+                ☀️
+              </span>
+            ) : (
+              <span className="text-lg" role="img" aria-label="Dark mode">
+                🌙
+              </span>
+            )}
+          </button>
         </nav>
 
-        {/* Mobile hamburger */}
-        <button
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-          className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-brand md:hidden"
-        >
-          <span className="sr-only">Menu</span>
-          <div className="relative h-4 w-6">
-            <span
-              className={`absolute left-0 top-0 h-0.5 w-6 bg-[rgb(var(--p-rush))] transition-transform ${
-                open ? "translate-y-2 rotate-45" : ""
-              }`}
-            />
-            <span
-              className={`absolute left-0 top-2 h-0.5 w-6 bg-[rgb(var(--p-rush))] transition-opacity ${
-                open ? "opacity-0" : "opacity-100"
-              }`}
-            />
-            <span
-              className={`absolute left-0 top-4 h-0.5 w-6 bg-[rgb(var(--p-rush))] transition-transform ${
-                open ? "-translate-y-2 -rotate-45" : ""
-              }`}
-            />
-          </div>
-        </button>
+        {/* Mobile controls: theme + menu */}
+        <div className="flex items-center gap-2 md:hidden">
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle dark mode"
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-brand hover:bg-muted transition-colors"
+          >
+            {theme === "dark" ? (
+              <span className="text-lg" role="img" aria-label="Light mode">
+                ☀️
+              </span>
+            ) : (
+              <span className="text-lg" role="img" aria-label="Dark mode">
+                🌙
+              </span>
+            )}
+          </button>
+
+          <button
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+            className="relative inline-flex h-9 w-9 items-center justify-center rounded-xl border border-brand"
+          >
+            <span className="sr-only">Menu</span>
+            <div className="relative h-4 w-6">
+              <span
+                className={`absolute left-0 top-0 h-0.5 w-6 bg-[rgb(var(--p-rush))] transition-transform ${
+                  open ? "translate-y-2 rotate-45" : ""
+                }`}
+              />
+              <span
+                className={`absolute left-0 top-2 h-0.5 w-6 bg-[rgb(var(--p-rush))] transition-opacity ${
+                  open ? "opacity-0" : "opacity-100"
+                }`}
+              />
+              <span
+                className={`absolute left-0 top-4 h-0.5 w-6 bg-[rgb(var(--p-rush))] transition-transform ${
+                  open ? "-translate-y-2 -rotate-45" : ""
+                }`}
+              />
+            </div>
+          </button>
+        </div>
       </div>
 
       {/* Mobile drawer */}
