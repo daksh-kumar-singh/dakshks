@@ -1,36 +1,51 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, ElementType } from "react";
+
+type RevealProps = {
+  children: React.ReactNode;
+  /** HTML tag to render. Use "span" inside list items to avoid breaking bullets. */
+  as?: ElementType;
+  className?: string;
+  /** Optional stagger (ms) */
+  delay?: number;
+};
 
 export default function Reveal({
   children,
+  as: Tag = "span",
   className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  const ref = useRef<HTMLDivElement | null>(null);
+  delay = 0,
+}: RevealProps) {
+  const ref = useRef<HTMLElement | null>(null);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
-    const el = ref.current!;
-    el.classList.add("reveal-pending");
+    const el = ref.current;
+    if (!el) return;
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          el.classList.add("reveal-in");
-          el.classList.remove("reveal-pending");
+          setShow(true);
           io.disconnect();
         }
       },
-      { rootMargin: "0px 0px -10% 0px", threshold: 0.1 }
+      { threshold: 0.15 }
     );
     io.observe(el);
     return () => io.disconnect();
   }, []);
 
   return (
-    <div ref={ref} className={className}>
+    <Tag
+      ref={ref as any}
+      style={{ transitionDelay: `${delay}ms` }}
+      className={`${show ? "reveal-in" : "reveal-pending"} ${
+        // ensure inline-friendly default for list items
+        Tag === "span" ? "block" : ""
+      } ${className}`}
+    >
       {children}
-    </div>
+    </Tag>
   );
 }
