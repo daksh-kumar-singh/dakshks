@@ -13,10 +13,10 @@
   --foreground: 222.2 47.4% 11.2%;   /* Deep neutral text */
   --muted: 210 16% 96%;
   --muted-foreground: 215 16% 40%;
-  --p-gold: 142 121 73;              /* Muted gold (#8E6F3E) for light mode */
-  --p-rush: 142 121 73;              /* Accent in light mode */
-  --p-rail: 157 151 149;             /* Rail Gray (#9D9795) */
-  --p-steel: 85 89 96;               /* Steel Gray (#555960) */
+  --p-gold: 142 121 73;              /* Muted gold (#8E6F3E) for light mode (RGB triplet) */
+  --p-rush: 142 121 73;              /* Accent in light mode (RGB triplet) */
+  --p-rail: 157 151 149;             /* Rail Gray (#9D9795) RGB */
+  --p-steel: 85 89 96;               /* Steel Gray (#555960) RGB */
 }
 
 .dark {
@@ -25,8 +25,8 @@
   --foreground: 0 0% 94%;            /* Off-white text */
   --muted: 0 0% 12%;
   --muted-foreground: 0 0% 75%;
-  --p-rush: 218 170 0;               /* Rush Gold (#DAAA00) — bright accent */
-  --p-gold: 218 170 0;               /* Same accent gold */
+  --p-rush: 218 170 0;               /* Rush Gold (#DAAA00) — bright accent (RGB triplet) */
+  --p-gold: 218 170 0;               /* Same accent gold (RGB triplet) */
   --p-rail: 157 151 149;             /* Gray borders */
   --p-steel: 85 89 96;
 }
@@ -57,14 +57,14 @@ h1, h2, h3, h4 {
   color: rgb(var(--p-gold));
 }
 
-/* Strong text (CV emphasis) */
+/* Strong text (CV emphasis) — FIX: use rgb(), not hsl() */
 strong {
-  color: hsl(var(--p-steel));
+  color: rgb(var(--p-steel));        /* visible dark gray on light mode */
   font-weight: 600;
 }
 
 .dark strong {
-  color: rgba(218, 170, 0, 0.85); /* Softer Rush Gold tint for emphasis */
+  color: rgba(218, 170, 0, 0.85);    /* soft Rush Gold tint in dark mode */
 }
 
 /* Links with subtle underline animation */
@@ -126,8 +126,9 @@ a:hover::after { width: 100%; }
   color: rgb(var(--p-gold));
 }
 
+/* FIX: make <strong> visible inside .prose on light mode */
 .prose strong {
-  color: hsl(var(--p-steel));
+  color: rgb(var(--p-steel));
 }
 
 .dark .prose strong {
