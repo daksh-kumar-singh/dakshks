@@ -111,6 +111,37 @@ a:hover::after { width: 100%; }
 }
 .prose img:hover { transform: scale(1.02); }
 
+/* --- Prose color overrides (fix for light mode / CV) --- */
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  color: rgb(var(--p-rush));
+}
+
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3,
+.dark .prose h4 {
+  color: rgb(var(--p-gold));
+}
+
+.prose strong {
+  color: hsl(var(--p-steel));
+}
+
+.dark .prose strong {
+  color: rgba(218, 170, 0, 0.85);
+}
+
+/* Ensure links inside prose use the site accent color */
+.prose a {
+  color: rgb(var(--p-rush));
+}
+.dark .prose a {
+  color: rgb(var(--p-gold));
+}
+
 /* =========================================
    Collapsible <details> styling
    ========================================= */
