@@ -19,10 +19,10 @@ type Options = {
 };
 
 const DEFAULTS: Required<Options> = {
-  density: 140,
+  density: 110,
   maxSize: 2.2,
-  speed: { min: 8, max: 28 },
-  maxAlpha: 0.9,
+  speed: { min: 8, max: 18 },
+  maxAlpha: 1.0,
   links: false,
 };
 
