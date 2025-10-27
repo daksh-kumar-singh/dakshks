@@ -1,28 +1,60 @@
-export type Publication = {
-  title: string;
-  authors: string;
-  venue: string;
-  year: number;
-  doi?: string;
-  arxiv?: string;
-  pdf?: string;
-  code?: string;
-  abstract?: string;
+import React from "react";
+import type { Publication } from "@/data/publications";
+
+type Props = Publication;
+
+const badgeColor: Record<string, string> = {
+  journal: "bg-[rgb(var(--p-rush))]/10 text-[rgb(var(--p-rush))]",
+  conference: "bg-[rgb(var(--p-rush))]/10 text-[rgb(var(--p-rush))]",
+  proceeding: "bg-[rgb(var(--p-rail))]/20 text-foreground",
+  patent: "bg-[rgb(var(--p-steel))]/20 text-foreground",
 };
 
-export default function PublicationCard(p: Publication) {
+export default function PublicationCard({
+  type,
+  title,
+  authors,
+  venue,
+  year,
+  doi,
+  url,
+  note,
+}: Props) {
+  const linkHref = doi ? `https://doi.org/${doi}` : url;
+  const showBadge = (
+    <span
+      className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${badgeColor[type] ?? "bg-muted text-foreground"}`}
+    >
+      {type.charAt(0).toUpperCase() + type.slice(1)}
+    </span>
+  );
+
   return (
-    <article className="rounded-2xl border p-4 grid gap-2">
-      <h3 className="font-medium">{p.title}</h3>
-      <p className="text-sm">{p.authors}</p>
-      <p className="text-sm text-muted-foreground">{p.venue} · {p.year}</p>
-      <div className="text-sm flex flex-wrap gap-3">
-        {p.doi && <a className="underline underline-offset-4" href={`https://doi.org/${p.doi}`} target="_blank">DOI</a>}
-        {p.arxiv && <a className="underline underline-offset-4" href={p.arxiv} target="_blank">arXiv</a>}
-        {p.pdf && <a className="underline underline-offset-4" href={p.pdf} target="_blank">PDF</a>}
-        {p.code && <a className="underline underline-offset-4" href={p.code} target="_blank">Code</a>}
+    <article className="card">
+      <div className="flex items-start justify-between gap-2">
+        <h3 className="m-0 text-lg font-semibold">{title}</h3>
+        {showBadge}
       </div>
-      {p.abstract && <p className="text-sm text-muted-foreground">{p.abstract}</p>}
+
+      <p className="mt-1 text-sm text-muted-foreground">{authors}</p>
+
+      <p className="mt-1 text-sm">
+        <em>{venue}</em> · <span>{year}</span>
+        {note ? <> · <span className="text-muted-foreground">{note}</span></> : null}
+      </p>
+
+      {linkHref && (
+        <p className="mt-2">
+          <a
+            className="underline underline-offset-4"
+            href={linkHref}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {doi ? `https://doi.org/${doi}` : url}
+          </a>
+        </p>
+      )}
     </article>
   );
 }
