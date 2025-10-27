@@ -31,7 +31,11 @@
   --p-steel: 85 89 96;
 }
 
-html { scroll-behavior: smooth; }
+html { 
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+}
 
 body {
   @apply bg-background text-foreground transition-colors duration-300;
@@ -39,6 +43,13 @@ body {
     "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji",
     "Segoe UI Symbol", sans-serif;
   line-height: 1.6;
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+}
+
+/* Fallback for browsers without overflow-clip support */
+.overflow-clip {
+  overflow: clip;
 }
 
 /* =========================================

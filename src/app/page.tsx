@@ -8,7 +8,7 @@ export default function HomePage() {
   return (
     <>
       <SiteHeader />
-      <main className="relative mx-auto max-w-5xl px-4 py-12">
+      <main className="relative mx-auto max-w-5xl px-4 py-12 overflow-x-hidden overflow-clip">
         {/* Title */}
         <Reveal>
           <section className="grid gap-4">

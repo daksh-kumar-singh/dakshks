@@ -10,7 +10,7 @@ export default function CVPage() {
   return (
     <>
       <SiteHeader />
-      <main className="relative mx-auto max-w-3xl px-4 py-12 prose dark:prose-invert">
+      <main className="relative mx-auto max-w-3xl px-4 py-12 prose dark:prose-invert overflow-x-hidden overflow-clip">
         {/* Side quantum/molecule effects (particles) */}
         <div className="pointer-events-none absolute left-[-16px] top-0 h-full w-16 md:left-[-40px] md:w-32 -z-10">
           <Particles />
