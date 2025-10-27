@@ -1,11 +1,10 @@
 "use client";
 
 /**
- * Composite background:
- * - Soft animated gold "blobs" (CSS)
- * - Film grain overlay (CSS data URL)
- * - Optional canvas particles (prop)
- * - Works without any external media files
+ * Composite background (no media files):
+ * - Animated gold "blobs" (CSS)
+ * - Film grain (CSS)
+ * - Optional canvas particles
  * - Respects prefers-reduced-motion
  */
 import Particles from "./Particles";
@@ -27,7 +26,7 @@ export default function QuantumBackground({
       {/* Film grain */}
       <div className="absolute inset-0 bg-noise opacity-[0.05]" />
 
-      {/* Particles (can be disabled with prop) */}
+      {/* Particles */}
       {particles ? <Particles /> : null}
     </div>
   );

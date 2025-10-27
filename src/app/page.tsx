@@ -1,7 +1,6 @@
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import Link from "next/link";
-import QuantumBackground from "@/components/QuantumBackground";
 import ParallaxRings from "@/components/ParallaxRings";
 import Reveal from "@/components/Reveal";
 
@@ -10,8 +9,6 @@ export default function HomePage() {
     <>
       <SiteHeader />
       <main className="relative mx-auto max-w-5xl px-4 py-12">
-        <QuantumBackground />
-
         {/* Title */}
         <Reveal>
           <section className="grid gap-4">
@@ -30,7 +27,7 @@ export default function HomePage() {
         {/* Decorative rings */}
         <ParallaxRings className="my-10 h-28" />
 
-        {/* Overview (short) */}
+        {/* Overview */}
         <Reveal>
           <section className="mt-10 grid gap-3">
             <h2 className="text-2xl">Overview</h2>
@@ -43,7 +40,7 @@ export default function HomePage() {
           </section>
         </Reveal>
 
-        {/* Research Summary (extended) */}
+        {/* Research Summary */}
         <Reveal>
           <section className="mt-10 grid gap-3">
             <h2 className="text-2xl">Research Summary</h2>
@@ -61,7 +58,7 @@ export default function HomePage() {
           </section>
         </Reveal>
 
-        {/* Image grid (placeholders) */}
+        {/* Gallery */}
         <Reveal>
           <section className="mt-10 grid gap-4">
             <h2 className="text-2xl">Gallery</h2>
@@ -69,7 +66,6 @@ export default function HomePage() {
               {Array.from({ length: 6 }).map((_, i) => (
                 <li key={i} className="rounded-2xl overflow-hidden border border-brand">
                   <div className="relative w-full" style={{ aspectRatio: "3 / 2" }}>
-                    {/* Replace with your images: /static/gallery/me.webp etc. */}
                     <div className="w-full h-full bg-[radial-gradient(circle_at_30%_30%,rgba(218,170,0,0.15),transparent_60%),radial-gradient(circle_at_70%_60%,rgba(157,151,149,0.15),transparent_55%)]" />
                   </div>
                 </li>

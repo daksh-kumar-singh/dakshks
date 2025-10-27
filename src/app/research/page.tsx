@@ -2,6 +2,7 @@ import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import { researchItems } from "@/data/research";
 import Reveal from "@/components/Reveal";
+import Particles from "@/components/Particles";
 
 export const metadata = { title: "Research Projects — Daksh K. Singh" };
 
@@ -9,11 +10,24 @@ export default function ResearchPage() {
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto max-w-5xl px-4 py-12">
-        <h1 className="text-3xl">Research Projects</h1>
-        <p className="mt-2 text-muted-foreground">
-          Newest first. Projects may map to one or more publications.
-        </p>
+      <main className="relative mx-auto max-w-5xl px-4 py-12">
+        {/* Side quantum/molecule effects (particles) */}
+        <div className="pointer-events-none absolute left-[-16px] top-0 h-full w-16 md:left-[-40px] md:w-32 -z-10">
+          <Particles />
+        </div>
+        <div className="pointer-events-none absolute right-[-16px] top-0 h-full w-16 md:right-[-40px] md:w-32 -z-10">
+          <Particles />
+        </div>
+
+        <Reveal>
+          <h1 className="text-3xl">Research Projects</h1>
+        </Reveal>
+        <Reveal>
+          <p className="mt-2 text-muted-foreground">
+            Newest first. Projects may map to one or more publications.
+          </p>
+        </Reveal>
+
         <ul className="mt-6 grid gap-4">
           {researchItems.map((item, i) => (
             <Reveal key={i}>
