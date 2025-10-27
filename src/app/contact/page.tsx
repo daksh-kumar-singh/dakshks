@@ -11,11 +11,14 @@ export default function ContactPage() {
         <h1 className="text-3xl">Contact</h1>
         <p className="text-muted-foreground">
           Best ways to reach me:
-          {" "}<a className="underline underline-offset-4" href="mailto:singh988@purdue.edu">singh988@purdue.edu</a>
+          {" "}
+          <a className="underline underline-offset-4" href="mailto:singh988@purdue.edu">singh988@purdue.edu</a>
           {" "}or{" "}
           <a className="underline underline-offset-4" href="mailto:singhkumardaksh@gmail.com">singhkumardaksh@gmail.com</a>
         </p>
-        <p className="text-sm text-muted-foreground">Open to research collaborations and internship opportunities.</p>
+        <p className="text-sm text-muted-foreground">
+          Open to research collaborations and internship opportunities in electrical engineering, nanofabrication, nanophotonics, metasurfaces, and quantum optics.
+        </p>
       </main>
       <SiteFooter />
     </>

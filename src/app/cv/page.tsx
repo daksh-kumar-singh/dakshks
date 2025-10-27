@@ -27,7 +27,6 @@ export default function CVPage() {
         </ul>
 
         <h2>Publications &amp; Patents</h2>
-
         <h3>Publications</h3>
         <ul>
           <li>
@@ -36,7 +35,7 @@ export default function CVPage() {
             <em> Frontiers in Optics + Laser Science 2025</em>. <em>[Accepted Contribution]</em>
           </li>
           <li>
-            Chen, Y., McNeil, A.M., Park, T., Wilson, B., Iyer, V., Bezick, M., Choi, J., Ojha, R., Mahendran, P.,
+            Chen, Y., McNeil, A.M., Park, T., Wilson, B., Iyer, V., Bezick, M., Choi, J., Ojha, R., Mahendran, P,
             <strong> Singh, D.K.</strong>, Chitturi, G., Chen, P., Do, T., Satuloori, V., Kildishev, A.V., Shalaev, V.M., Moebius, M., Cai, W., Liu, Y., Boltasseva, A. (2025).
             Machine-Learning-Assisted Photonic Device Development: A Multiscale Approach from Theory to Characterization.
             <em> Nanophotonics</em>.
@@ -57,8 +56,10 @@ export default function CVPage() {
         <h3>Patents</h3>
         <ul>
           <li>
-            First Inventor: <strong>Kildishev, Alexander V.</strong>; Co-Inventors: <strong>Singh, Daksh Kumar</strong>; Wilson, Blake A.; Chen, Yuheng; Ojha, Rohan; Pottle, Jaxon; Bezick, Michael; Boltasseva, Alexandra; Shalaev, Vladimir M. (2024).
-            <em> ML Assisted Authentication via Tampered Optical Responses</em>. Application No. 19/233,515, filed June 10, 2025. <strong>Patent Pending</strong>.
+            First Inventor: <strong>Kildishev, Alexander V.</strong>; Co-Inventors: <strong>Singh, Daksh Kumar</strong>;
+            Wilson, Blake A.; Chen, Yuheng; Ojha, Rohan; Pottle, Jaxon; Bezick, Michael; Boltasseva, Alexandra; Shalaev, Vladimir M. (2024).
+            <em> ML Assisted Authentication via Tampered Optical Responses</em>. Application No. 19/233,515, filed June 10, 2025.
+            <strong> Patent Pending</strong>.
           </li>
         </ul>
 
@@ -72,7 +73,7 @@ export default function CVPage() {
             <strong>Singh, D. K.</strong>, Chen, Y.; Authors: Kudyshev, Z., Bogdanov, S., Isacsson, T., Kildishev, A., Boltasseva, A., Shalaev, V. (2023).
             Rapid Classification of Quantum Sources Enabled by Machine Learning. <em>Quantum Science Center All-Hands Meeting</em>, Nashville, TN.
           </li>
-        <h4>See the <Link href="/publications">Publications</Link> page for the full list.</h4>
+          <li>See the <Link href="/publications">Publications</Link> page for the full list.</li>
         </ul>
 
         <h2>Research Experience</h2>
@@ -140,10 +141,27 @@ export default function CVPage() {
         <h2>Skills</h2>
         <ul>
           <li><strong>Fabrication &amp; Processing:</strong> E-beam lithography, photolithography, pulsed laser deposition (PLD), metal evaporation &amp; sputtering, chemical vapor deposition (CVD), 2D material exfoliation &amp; transfer.</li>
-          <li><strong>Characterization &amp; Assembly:</strong> Variable-angle spectroscopic ellipsometry (VASE), dark-field microscopy, scanning electron microscopy (SEM), atomic force microscopy (AFM), photoluminescence (PL), g2 correlation measurements, optical alignment, lens/mirror system assembly.</li>
+          <li><strong>Characterization &amp; Assembly:</strong> Variable-angle spectroscopic ellipsometry (VASE), dark-field microscopy, SEM, AFM, photoluminescence (PL), g2 correlation measurements, optical alignment, lens/mirror system assembly.</li>
           <li><strong>Simulation &amp; Computation:</strong> Ansys Lumerical FDTD, Ansys HFSS, Tidy3D FDTD, RCWA (GRCWA/S4), KiCad, LTspice, MATLAB, Python (ML/AI), HDL (Verilog/SystemVerilog), QICK, Qiskit.</li>
           <li><strong>Soft Skills:</strong> Leadership, communication, documentation, time management, teamwork.</li>
           <li><strong>Languages:</strong> English (Native/Bilingual), Hindi (Native/Bilingual).</li>
+        </ul>
+
+        <h2>Honors &amp; Fellowships</h2>
+        <ul>
+          <li><strong>Dean’s List</strong>, 6/6 semesters (Fall 2022 – Spring 2025)</li>
+          <li><strong>Semester Honors</strong>, 5/6 semesters (Fall 2022 – Spring 2025)</li>
+          <li><strong>Summer Undergraduate Research Fellowship (SURF)</strong> Award (May 2023)</li>
+          <li><strong>Best Poster Presentation</strong>, Purdue Summer Research Symposium (Aug 2023)</li>
+          <li><strong>First-Time Researcher Fellowship</strong> Award (Jan 2023)</li>
+        </ul>
+
+        <h2>Professional Affiliations</h2>
+        <ul>
+          <li><strong>Optica</strong> (Purdue University Chapter) — Treasurer</li>
+          <li><strong>DOE Quantum Science Center</strong> (QSC)</li>
+          <li><strong>Semiconductor Student Alliance</strong> (Purdue Chapter)</li>
+          <li><strong>Collaborator:</strong> QuEra Computing Inc., Microsoft Azure Quantum, Quantinuum</li>
         </ul>
       </main>
       <SiteFooter />
