@@ -1,39 +1,68 @@
 "use client";
 
 /**
- * Global, continuous particle system (singleton).
- * - Creates one fixed, full-screen canvas and keeps it running across pages.
- * - Subsequent mounts are NO-OPs (we keep only one instance).
- * - Theme-aware (reads CSS variables for gold/gray).
- * - Reduced-motion friendly.
+ * Global, continuous particle system (singleton) that survives route changes.
+ * - Creates ONE fixed, full-screen canvas attached to <body>
+ * - Persists and keeps animating across Next.js page transitions
+ * - If remounted, it resumes/ensures running instead of exiting early
+ * - Theme-aware (reads CSS custom properties), reduced-motion aware
  */
+
 import { useEffect } from "react";
 
 type Options = {
-  /** particles per 1000x1000 logical pixels (density) */
-  density?: number;
-  /** maximum particle size in px */
-  maxSize?: number;
-  /** speed range (px per second) */
-  speed?: { min: number; max: number };
-  /** maximum opacity */
-  maxAlpha?: number;
-  /** whether to draw faint links between close particles */
+  density?: number; // particles per 1000x1000 logical px
+  maxSize?: number; // px
+  speed?: { min: number; max: number }; // px/sec
+  maxAlpha?: number; // 0..1
   links?: boolean;
 };
 
 const DEFAULTS: Required<Options> = {
-  density: 140, // higher = more particles
+  density: 140,
   maxSize: 2.2,
   speed: { min: 8, max: 28 },
   maxAlpha: 0.9,
   links: false,
 };
 
+type P = {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  r: number;
+  a: number;
+  life: number;
+  ttl: number;
+  color: [number, number, number];
+};
+
+type Ctrl = {
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+  running: boolean;
+  raf: number | null;
+  particles: P[];
+  opts: Required<Options>;
+  dpr: number;
+  resizeObs?: ResizeObserver;
+  start: () => void;
+  stop: () => void;
+  ensureRunning: () => void;
+  recalc: () => void;
+};
+
+// put controller on window so it survives remounts
+declare global {
+  interface Window {
+    __particlesCtrl?: Ctrl;
+  }
+}
+
 function readRGBVar(name: string, fallback: [number, number, number]): [number, number, number] {
   try {
     const val = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-    // Expecting "r g b" numbers per your globals.css custom props
     const parts = val.split(/\s+/).map((n) => parseFloat(n));
     if (parts.length >= 3 && parts.every((n) => Number.isFinite(n))) {
       return [parts[0], parts[1], parts[2]];
@@ -44,236 +73,245 @@ function readRGBVar(name: string, fallback: [number, number, number]): [number, 
   return fallback;
 }
 
-export default function Particles(_props: Options = {}) {
-  useEffect(() => {
-    // Respect reduced motion
-    const reduce = typeof window !== "undefined" &&
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
+function createController(_opts: Options = {}): Ctrl {
+  const opts: Required<Options> = { ...DEFAULTS, ..._opts };
 
-    // Singleton canvas
-    const EXISTING_ID = "global-particles-canvas";
-    let canvas = document.getElementById(EXISTING_ID) as HTMLCanvasElement | null;
-    if (canvas) {
-      // Already running; do nothing (keep a single particle system for the app)
-      return;
-    }
+  const canvas = document.createElement("canvas");
+  canvas.id = "global-particles-canvas";
+  canvas.style.position = "fixed";
+  canvas.style.inset = "0";
+  canvas.style.zIndex = "-10";
+  canvas.style.pointerEvents = "none";
+  canvas.style.userSelect = "none";
+  canvas.style.opacity = "0.8";
+  document.body.appendChild(canvas);
 
-    const opts: Required<Options> = { ...DEFAULTS, ..._props };
+  const ctx = canvas.getContext("2d", { alpha: true })!;
+  const ctrl: Ctrl = {
+    canvas,
+    ctx,
+    running: false,
+    raf: null,
+    particles: [],
+    opts,
+    dpr: Math.max(1, Math.min(window.devicePixelRatio || 1, 2)),
+    start,
+    stop,
+    ensureRunning,
+    recalc,
+    resizeObs: undefined,
+  };
 
-    // Create and mount canvas
-    canvas = document.createElement("canvas");
-    canvas.id = EXISTING_ID;
-    canvas.style.position = "fixed";
-    canvas.style.inset = "0";
-    canvas.style.zIndex = "-10";
-    canvas.style.pointerEvents = "none";
-    canvas.style.userSelect = "none";
-    // slight transparency via compositing
-    canvas.style.opacity = "0.8";
-    document.body.appendChild(canvas);
+  // size canvas
+  function size() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    canvas.width = Math.floor(w * ctrl.dpr);
+    canvas.height = Math.floor(h * ctrl.dpr);
+    canvas.style.width = `${w}px`;
+    canvas.style.height = `${h}px`;
+    ctx.setTransform(ctrl.dpr, 0, 0, ctrl.dpr, 0, 0);
+  }
+  size();
+  ctrl.resizeObs = new ResizeObserver(size);
+  ctrl.resizeObs.observe(document.documentElement);
 
-    const ctx = canvas.getContext("2d", { alpha: true })!;
-    const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2)); // cap DPR for perf
+  // seed particles
+  const targetForViewport = () => {
+    const w = canvas.width / ctrl.dpr;
+    const h = canvas.height / ctrl.dpr;
+    const area = w * h;
+    return Math.round((area / 1_000_000) * ctrl.opts.density);
+  };
 
-    // Sizing
-    function resize() {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      canvas!.width = Math.floor(w * dpr);
-      canvas!.height = Math.floor(h * dpr);
-      canvas!.style.width = `${w}px`;
-      canvas!.style.height = `${h}px`;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-    resize();
-    const ro = new ResizeObserver(resize);
-    ro.observe(document.documentElement);
-
-    // Colors from CSS custom properties
-    const goldBright = readRGBVar("--p-rush", [218, 170, 0]); // Rush Gold
-    const goldMuted = readRGBVar("--p-gold", [207, 185, 145]); // CFB991-ish
+  function palette(): [number, number, number][] {
+    const goldBright = readRGBVar("--p-rush", [218, 170, 0]);
+    const goldMuted = readRGBVar("--p-gold", [207, 185, 145]);
     const steelGray = readRGBVar("--p-steel", [85, 89, 96]);
     const railGray = readRGBVar("--p-rail", [157, 151, 149]);
+    return [goldBright, goldMuted, steelGray, railGray];
+  }
 
-    // Particle data
-    type P = {
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      r: number;
-      a: number; // alpha
-      life: number;
-      ttl: number;
-      color: [number, number, number];
+  const rand = (min: number, max: number) => min + Math.random() * (max - min);
+  const pick = <T,>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
+
+  function spawnParticle(edge?: boolean): P {
+    const w = canvas.width / ctrl.dpr;
+    const h = canvas.height / ctrl.dpr;
+    const r = Math.max(0.8, rand(0.8, ctrl.opts.maxSize));
+    const speed = rand(ctrl.opts.speed.min, ctrl.opts.speed.max) / 60;
+    const angle = rand(0, Math.PI * 2);
+    let x = rand(0, w);
+    let y = rand(0, h);
+    if (edge) {
+      const side = Math.floor(Math.random() * 4);
+      if (side === 0) { x = -10; y = rand(0, h); }
+      if (side === 1) { x = w + 10; y = rand(0, h); }
+      if (side === 2) { x = rand(0, w); y = -10; }
+      if (side === 3) { x = rand(0, w); y = h + 10; }
+    }
+    const col = pick(palette());
+    const ttl = rand(8000, 20000);
+    const p: P = {
+      x, y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      r,
+      a: 0,
+      life: 0,
+      ttl,
+      color: col,
     };
-    const particles: P[] = [];
+    return p;
+  }
 
-    // Target particle count based on area & density
-    const targetForViewport = () => {
-      const area = (canvas!.width / dpr) * (canvas!.height / dpr); // logical px
-      return Math.round((area / 1_000_000) * opts.density); // density per 1000x1000
-    };
+  // build up to target
+  const desired0 = targetForViewport();
+  for (let i = 0; i < desired0; i++) {
+    const p = spawnParticle(false);
+    p.life = rand(0, p.ttl);
+    p.a = Math.min(ctrl.opts.maxAlpha, p.life / 1200);
+    ctrl.particles.push(p);
+  }
 
-    // Random helpers
-    const rand = (min: number, max: number) => min + Math.random() * (max - min);
-    const pick = <T,>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
+  let last = performance.now();
+  let adderId: number | null = null;
 
-    function spawnParticle(edge?: boolean): P {
-      const w = canvas!.width / dpr;
-      const h = canvas!.height / dpr;
-      const r = Math.max(0.8, rand(0.8, opts.maxSize));
-      const speed = rand(opts.speed.min, opts.speed.max) / 60; // per frame @ ~60fps
-      const angle = rand(0, Math.PI * 2);
-      let x = rand(0, w);
-      let y = rand(0, h);
+  function loop(now: number) {
+    if (!ctrl.running) return;
+    const dt = now - last;
+    last = now;
 
-      // If spawning at edges, bias to edges for nicer flow
-      if (edge) {
-        const side = Math.floor(Math.random() * 4);
-        if (side === 0) { x = -10; y = rand(0, h); }
-        if (side === 1) { x = w + 10; y = rand(0, h); }
-        if (side === 2) { x = rand(0, w); y = -10; }
-        if (side === 3) { x = rand(0, w); y = h + 10; }
+    const w = canvas.width / ctrl.dpr;
+    const h = canvas.height / ctrl.dpr;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // tick/draw
+    for (let i = ctrl.particles.length - 1; i >= 0; i--) {
+      const p = ctrl.particles[i];
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.life += dt;
+
+      if (p.x < -20) p.x = w + 20;
+      if (p.x > w + 20) p.x = -20;
+      if (p.y < -20) p.y = h + 20;
+      if (p.y > h + 20) p.y = -20;
+
+      const fadeIn = Math.min(1, p.life / 400);
+      const fadeOut = Math.max(0, (p.ttl - p.life) / 1000);
+      p.a = Math.min(ctrl.opts.maxAlpha, fadeIn, fadeOut);
+
+      if (p.life > p.ttl) {
+        ctrl.particles.splice(i, 1);
+        ctrl.particles.push(spawnParticle(true));
+        continue;
       }
 
-      const palette: [number, number, number][] = [
-        goldBright,
-        goldMuted,
-        steelGray,
-        railGray,
-      ];
-      const color = pick(palette);
-      const ttl = rand(8_000, 20_000); // ms
-      const p: P = {
-        x,
-        y,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        r,
-        a: 0, // fade in
-        life: 0,
-        ttl,
-        color,
-      };
-      return p;
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(${p.color[0]}, ${p.color[1]}, ${p.color[2]}, ${p.a})`;
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
     }
 
-    // Seed initial particles up to target
-    let desired = targetForViewport();
-    for (let i = 0; i < desired; i++) {
-      const p = spawnParticle(false);
-      // distribute life so they are at different phases
-      p.life = rand(0, p.ttl);
-      p.a = Math.min(opts.maxAlpha, p.life / 1200); // quick fade in
-      particles.push(p);
-    }
+    ctrl.raf = requestAnimationFrame(loop);
+  }
 
-    // Continuously add a few more (up to 1.5x target) for a “more everywhere” feel
-    let hardCap = Math.round(desired * 1.5);
-    const adder = setInterval(() => {
-      desired = targetForViewport();
-      hardCap = Math.round(desired * 1.5);
-      if (particles.length < hardCap) {
-        for (let i = 0; i < 6; i++) {
-          particles.push(spawnParticle(true));
-        }
+  function start() {
+    if (ctrl.running) return;
+    // reduced motion respect
+    const reduce =
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      ctrl.running = false;
+      return;
+    }
+    ctrl.running = true;
+    last = performance.now();
+    ctrl.raf = requestAnimationFrame(loop);
+
+    // keep adding up to a soft cap (1.5x target)
+    const runAdder = () => {
+      const desired = targetForViewport();
+      const hardCap = Math.round(desired * 1.5);
+      if (ctrl.particles.length < hardCap) {
+        for (let i = 0; i < 6; i++) ctrl.particles.push(spawnParticle(true));
       }
-    }, 1200);
-
-    // Animation loop
-    let raf = 0;
-    let last = performance.now();
-    function frame(now: number) {
-      const dt = now - last;
-      last = now;
-
-      const w = canvas!.width / dpr;
-      const h = canvas!.height / dpr;
-
-      // Clear with subtle composite for softer trails
-      ctx.clearRect(0, 0, w, h);
-
-      // Update/draw particles
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-
-        // integrate
-        p.x += p.vx * dt;
-        p.y += p.vy * dt;
-        p.life += dt;
-
-        // wrap around edges for continuous presence
-        if (p.x < -20) p.x = w + 20;
-        if (p.x > w + 20) p.x = -20;
-        if (p.y < -20) p.y = h + 20;
-        if (p.y > h + 20) p.y = -20;
-
-        // alpha ramp in/out
-        const fadeIn = Math.min(1, p.life / 400);
-        const fadeOut = Math.max(0, (p.ttl - p.life) / 1000);
-        p.a = Math.min(opts.maxAlpha, fadeIn, fadeOut);
-
-        // kill and respawn
-        if (p.life > p.ttl) {
-          particles.splice(i, 1);
-          particles.push(spawnParticle(true));
-          continue;
-        }
-
-        // draw
-        ctx.beginPath();
-        ctx.fillStyle = `rgba(${p.color[0]}, ${p.color[1]}, ${p.color[2]}, ${p.a})`;
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // Optional links between close particles (disabled by default for perf/cleanliness)
-      // if (opts.links) { ...draw lines... }
-
-      raf = requestAnimationFrame(frame);
-    }
-    raf = requestAnimationFrame(frame);
-
-    // Listen for theme changes dynamically (swap palette without reloading)
-    const mql = window.matchMedia("(prefers-color-scheme: dark)");
-    const themeRecalc = () => {
-      // We don't need to do anything heavy; colors are read at spawn time.
-      // If you want live tint change, you could rebuild particles here.
     };
+    if (adderId == null) {
+      adderId = window.setInterval(runAdder, 1200);
+    }
+  }
+
+  function stop() {
+    // We generally DON'T stop on unmount; only on full unload if needed.
+    ctrl.running = false;
+    if (ctrl.raf != null) cancelAnimationFrame(ctrl.raf);
+    ctrl.raf = null;
+  }
+
+  function ensureRunning() {
+    // called when component remounts on a new route
+    start();
+  }
+
+  function recalc() {
+    // Re-seed colors for future spawns (existing particles keep their color)
+    // Optionally we could also update all current particle colors here.
+  }
+
+  // Resume on visibility gain
+  const onVisibility = () => {
+    if (document.visibilityState === "visible") ensureRunning();
+  };
+  document.addEventListener("visibilitychange", onVisibility);
+
+  // Track theme changes (optional hook point)
+  const mql = window.matchMedia("(prefers-color-scheme: dark)");
+  const onTheme = () => recalc();
+  try {
+    mql.addEventListener?.("change", onTheme);
+  } catch {
+    mql.addListener?.(onTheme);
+  }
+
+  // DO NOT tear down on route change. We keep a persistent canvas/loop.
+  // The only time we might want full cleanup is a hard reload/unload.
+  window.addEventListener("beforeunload", () => {
     try {
-      mql.addEventListener?.("change", themeRecalc);
-    } catch {
-      mql.addListener?.(themeRecalc);
-    }
-
-    // Cleanup: keep canvas around (singleton), but stop loops if page unloaded
-    const onVisibility = () => {
-      if (document.visibilityState === "hidden") {
-        cancelAnimationFrame(raf);
-      } else {
-        last = performance.now();
-        raf = requestAnimationFrame(frame);
-      }
-    };
-    document.addEventListener("visibilitychange", onVisibility);
-
-    return () => {
-      // Do NOT remove the canvas — keep singleton across route changes.
-      clearInterval(adder);
-      cancelAnimationFrame(raf);
+      stop();
+      ctrl.resizeObs?.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
       try {
-        mql.removeEventListener?.("change", themeRecalc);
+        mql.removeEventListener?.("change", onTheme);
       } catch {
-        mql.removeListener?.(themeRecalc);
+        mql.removeListener?.(onTheme);
       }
-      ro.disconnect();
-    };
-  }, [_props]);
+      // Leave canvas in DOM; browser will clear it on unload anyway.
+    } catch {
+      /* ignore */
+    }
+  });
 
-  // Headless: the global canvas is inserted into <body>, so render nothing here.
+  // Kick it off
+  start();
+
+  return ctrl;
+}
+
+export default function Particles(props: Options = {}) {
+  useEffect(() => {
+    // If controller already exists, ensure it's running
+    if (window.__particlesCtrl) {
+      window.__particlesCtrl.ensureRunning();
+      return;
+    }
+    // else create it
+    window.__particlesCtrl = createController(props);
+    // No cleanup: keep singleton alive across route transitions
+  }, [props]);
+
   return null;
 }
