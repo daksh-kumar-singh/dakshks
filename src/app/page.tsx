@@ -8,14 +8,7 @@ export default function HomePage() {
   return (
     <>
       <SiteHeader />
-      <main className="relative mx-auto max-w-3xl px-4 pb-12 overflow-x-hidden overflow-clip
-  prose dark:prose-invert
-  prose-h1:mt-2 prose-h1:mb-3
-  prose-h2:mt-6 prose-h2:mb-2
-  prose-h3:mt-5 prose-h3:mb-1
-  prose-p:my-3
-  prose-ul:my-3 prose-ol:my-3
-  sm:prose-h1:mt-3 sm:prose-h1:mb-4 sm:prose-h2:mt-8 sm:prose-h2:mb-3">
+      <main className="relative mx-auto max-w-3xl px-4 py-6 prose dark:prose-invert overflow-x-hidden overflow-clip">
         {/* Title */}
         <Reveal>
           <section className="grid gap-4">
