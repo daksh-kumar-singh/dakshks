@@ -8,8 +8,16 @@ export default function HomePage() {
   return (
     <>
       <SiteHeader />
-      <main className="relative mx-auto max-w-3xl px-4 py-8 prose dark:prose-invert overflow-x-hidden overflow-clip
-  [&>h2:first-of-type]:mt-2">
+      <main
+        className={[
+          "relative mx-auto max-w-3xl px-4 py-12",
+          "prose dark:prose-invert overflow-x-hidden overflow-clip",
+          // tighten heading spacing like CV
+          "[&>section>h2]:mt-8 [&>section>h2]:mb-2",
+          // kill the big default top margin on the *first* h2 (“Overview”)
+          "[&>section:first-of-type>h2]:mt-2",
+        ].join(" ")}
+      >
         {/* Title */}
         <Reveal>
           <section className="grid gap-4">
@@ -25,12 +33,12 @@ export default function HomePage() {
           </section>
         </Reveal>
 
-        {/* Decorative rings */}
-        <ParallaxRings className="my-10 h-28" />
+        {/* Decorative rings — make compact, pull content up slightly */}
+        <ParallaxRings className="my-2 h-16 -mb-4" />
 
         {/* Overview */}
         <Reveal>
-          <section className="-mt-6 sm:-mt-8 grid gap-3">
+          <section className="grid gap-3">
             <h2 className="text-2xl">Overview</h2>
             <p className="max-w-3xl text-muted-foreground">
               I’m a senior in Purdue’s Elmore Family School of ECE and a member of the John Martinson Honors College,
@@ -43,7 +51,7 @@ export default function HomePage() {
 
         {/* Research Summary */}
         <Reveal>
-          <section className="mt-10 grid gap-3">
+          <section className="grid gap-3">
             <h2 className="text-2xl">Research Summary</h2>
             <p className="max-w-3xl text-muted-foreground">
               My research explores the design, fabrication, and measurement of photonic structures that enable or enhance
@@ -51,9 +59,9 @@ export default function HomePage() {
               metasurface optics for beam control, and single-photon platforms benefiting from deterministic emitter–cavity
               coupling. Methods span electron-beam lithography and thin-film deposition for device realization;
               electromagnetic modeling (e.g., RCWA-class solvers) for design; and optical characterization such as
-              photoluminescence, time-correlated single-photon counting (TCSPC), and correlation (g2) analyses.
-              Recent efforts include metasurface simulations targeting enhanced single-photon emission in 2D materials,
-              spin-related contacts for CrSBr, and metalens design for neutral-atom control; in parallel, I contribute to
+              photoluminescence, time-correlated single-photon counting (TCSPC), and correlation (g2) analyses. Recent
+              efforts include metasurface simulations targeting enhanced single-photon emission in 2D materials, spin-related
+              contacts for CrSBr, and metalens design for neutral-atom control; in parallel, I contribute to
               machine-learning pipelines for optical PUF authentication and tamper detection with residual-attention models.
             </p>
           </section>
@@ -61,7 +69,7 @@ export default function HomePage() {
 
         {/* Gallery */}
         <Reveal>
-          <section className="mt-10 grid gap-4">
+          <section className="grid gap-4">
             <h2 className="text-2xl">Gallery</h2>
             <ul className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {Array.from({ length: 6 }).map((_, i) => (
