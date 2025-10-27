@@ -8,7 +8,8 @@ export default function HomePage() {
   return (
     <>
       <SiteHeader />
-      <main className="relative mx-auto max-w-3xl px-4 py-6 prose dark:prose-invert overflow-x-hidden overflow-clip">
+      <main className="relative mx-auto max-w-3xl px-4 py-8 prose dark:prose-invert overflow-x-hidden overflow-clip
+  [&>h2:first-of-type]:mt-2">
         {/* Title */}
         <Reveal>
           <section className="grid gap-4">
@@ -29,7 +30,7 @@ export default function HomePage() {
 
         {/* Overview */}
         <Reveal>
-          <section className="mt-10 grid gap-3">
+          <section className="-mt-6 sm:-mt-8 grid gap-3">
             <h2 className="text-2xl">Overview</h2>
             <p className="max-w-3xl text-muted-foreground">
               I’m a senior in Purdue’s Elmore Family School of ECE and a member of the John Martinson Honors College,
