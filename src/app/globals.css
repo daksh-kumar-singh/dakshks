@@ -2,6 +2,74 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =========================
+   ACCESSIBILITY UTILITIES
+   ========================= */
+
+/* Respect OS "Reduce Motion" AND our own runtime toggle `.no-anim` */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+.no-anim * {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+/* If you have fancy underline transitions via ::after, tame them for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  a::after {
+    transition: none !important;
+  }
+}
+
+/* =========================
+   LIGHT THEME CONTRAST
+   ========================= */
+/* Your gold (rgb(142 121 73)) is < 4.5:1 on white. Use a darker tone in LIGHT mode only. */
+:root {
+  /* darker heading color only for light theme; keeps your brand vibe */
+  --heading-light: #5b4a23; /* ~7:1 on white for most sizes */
+}
+
+/* If you’re using prose, nudge headings in LIGHT mode only */
+:root .prose :where(h1, h2, h3, h4) {
+  color: var(--heading-light);
+}
+:root .prose :where(h1, h2, h3, h4) a {
+  color: inherit;
+}
+
+/* In DARK mode preserve your existing colors (gold etc.) */
+.dark .prose :where(h1, h2, h3, h4) {
+  color: inherit; /* your dark:prose-invert keeps gold */
+}
+
+/* Utility if you prefer to opt specific headings in (used below on non-prose headings) */
+.text-heading-light {
+  color: var(--heading-light);
+}
+.dark .text-heading-light {
+  color: inherit;
+}
+
+/* Visually hidden helper (Tailwind has sr-only, but include just in case) */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
 /* ======================================================
    Purdue-Inspired Global Theme
    Light/Dark modes with flipped gold tones for balance

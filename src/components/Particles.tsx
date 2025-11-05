@@ -2,10 +2,9 @@
 
 /**
  * Global, continuous particle system (singleton) that survives route changes.
- * - Creates ONE fixed, full-screen canvas attached to <body>
- * - Persists and keeps animating across Next.js page transitions
- * - If remounted, it resumes/ensures running instead of exiting early
- * - Theme-aware (reads CSS custom properties), reduced-motion aware
+ * Accessibility:
+ *  - Respects prefers-reduced-motion
+ *  - Pauses when <html> has the .no-anim class (toggled in SiteHeader)
  */
 
 import { useEffect } from "react";
@@ -47,10 +46,14 @@ type Ctrl = {
   opts: Required<Options>;
   dpr: number;
   resizeObs?: ResizeObserver;
+  mql?: MediaQueryList;
+  htmlObserver?: MutationObserver;
+  adderId?: number | null;
   start: () => void;
   stop: () => void;
   ensureRunning: () => void;
   recalc: () => void;
+  shouldRun: () => boolean;
 };
 
 // put controller on window so it survives remounts
@@ -60,9 +63,14 @@ declare global {
   }
 }
 
-function readRGBVar(name: string, fallback: [number, number, number]): [number, number, number] {
+function readRGBVar(
+  name: string,
+  fallback: [number, number, number]
+): [number, number, number] {
   try {
-    const val = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const val = getComputedStyle(document.documentElement)
+      .getPropertyValue(name)
+      .trim();
     const parts = val.split(/\s+/).map((n) => parseFloat(n));
     if (parts.length >= 3 && parts.every((n) => Number.isFinite(n))) {
       return [parts[0], parts[1], parts[2]];
@@ -84,6 +92,7 @@ function createController(_opts: Options = {}): Ctrl {
   canvas.style.pointerEvents = "none";
   canvas.style.userSelect = "none";
   canvas.style.opacity = "0.8";
+  canvas.setAttribute("aria-hidden", "true");
   document.body.appendChild(canvas);
 
   const ctx = canvas.getContext("2d", { alpha: true })!;
@@ -95,12 +104,24 @@ function createController(_opts: Options = {}): Ctrl {
     particles: [],
     opts,
     dpr: Math.max(1, Math.min(window.devicePixelRatio || 1, 2)),
+    resizeObs: undefined,
+    mql: undefined,
+    htmlObserver: undefined,
+    adderId: null,
     start,
     stop,
     ensureRunning,
     recalc,
-    resizeObs: undefined,
+    shouldRun,
   };
+
+  function shouldRun() {
+    const reduce =
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const paused = document.documentElement.classList.contains("no-anim");
+    return !(reduce || paused);
+  }
 
   // size canvas
   function size() {
@@ -145,15 +166,28 @@ function createController(_opts: Options = {}): Ctrl {
     let y = rand(0, h);
     if (edge) {
       const side = Math.floor(Math.random() * 4);
-      if (side === 0) { x = -10; y = rand(0, h); }
-      if (side === 1) { x = w + 10; y = rand(0, h); }
-      if (side === 2) { x = rand(0, w); y = -10; }
-      if (side === 3) { x = rand(0, w); y = h + 10; }
+      if (side === 0) {
+        x = -10;
+        y = rand(0, h);
+      }
+      if (side === 1) {
+        x = w + 10;
+        y = rand(0, h);
+      }
+      if (side === 2) {
+        x = rand(0, w);
+        y = -10;
+      }
+      if (side === 3) {
+        x = rand(0, w);
+        y = h + 10;
+      }
     }
     const col = pick(palette());
     const ttl = rand(8000, 20000);
     const p: P = {
-      x, y,
+      x,
+      y,
       vx: Math.cos(angle) * speed,
       vy: Math.sin(angle) * speed,
       r,
@@ -175,10 +209,16 @@ function createController(_opts: Options = {}): Ctrl {
   }
 
   let last = performance.now();
-  let adderId: number | null = null;
 
   function loop(now: number) {
     if (!ctrl.running) return;
+
+    // If settings changed mid-loop, bail and stop cleanly
+    if (!ctrl.shouldRun()) {
+      stop();
+      return;
+    }
+
     const dt = now - last;
     last = now;
 
@@ -220,83 +260,91 @@ function createController(_opts: Options = {}): Ctrl {
 
   function start() {
     if (ctrl.running) return;
-    // reduced motion respect
-    const reduce =
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) {
-      ctrl.running = false;
+    if (!ctrl.shouldRun()) {
+      // If we shouldn't run, ensure timers are cleared
+      stop();
       return;
     }
     ctrl.running = true;
     last = performance.now();
     ctrl.raf = requestAnimationFrame(loop);
 
-    // keep adding up to a soft cap (1.5x target)
+    // keep adding up to a soft cap (1.5x target) while running
     const runAdder = () => {
+      if (!ctrl.running) return;
       const desired = targetForViewport();
       const hardCap = Math.round(desired * 1.5);
       if (ctrl.particles.length < hardCap) {
         for (let i = 0; i < 6; i++) ctrl.particles.push(spawnParticle(true));
       }
     };
-    if (adderId == null) {
-      adderId = window.setInterval(runAdder, 1200);
-    }
+    if (!ctrl.adderId) ctrl.adderId = window.setInterval(runAdder, 1200);
   }
 
   function stop() {
-    // We generally DON'T stop on unmount; only on full unload if needed.
     ctrl.running = false;
     if (ctrl.raf != null) cancelAnimationFrame(ctrl.raf);
     ctrl.raf = null;
+    if (ctrl.adderId) {
+      clearInterval(ctrl.adderId);
+      ctrl.adderId = null;
+    }
+    // Clear the canvas so a paused state isn’t “frozen”
+    const w = canvas.width / ctrl.dpr;
+    const h = canvas.height / ctrl.dpr;
+    ctx.clearRect(0, 0, w, h);
   }
 
   function ensureRunning() {
-    // called when component remounts on a new route
-    start();
+    if (ctrl.shouldRun()) start();
+    else stop();
   }
 
   function recalc() {
-    // Re-seed colors for future spawns (existing particles keep their color)
-    // Optionally we could also update all current particle colors here.
+    // Color palette will be used for future spawns. Existing particles keep their color.
   }
 
-  // Resume on visibility gain
+  // Visibility: resume when tab becomes visible (if allowed)
   const onVisibility = () => {
     if (document.visibilityState === "visible") ensureRunning();
   };
   document.addEventListener("visibilitychange", onVisibility);
 
-  // Track theme changes (optional hook point)
-  const mql = window.matchMedia("(prefers-color-scheme: dark)");
-  const onTheme = () => recalc();
+  // Listen for OS reduced-motion changes
+  ctrl.mql = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const mqlHandler = () => ensureRunning();
   try {
-    mql.addEventListener?.("change", onTheme);
+    ctrl.mql.addEventListener?.("change", mqlHandler);
   } catch {
-    mql.addListener?.(onTheme);
+    ctrl.mql.addListener?.(mqlHandler);
   }
 
-  // DO NOT tear down on route change. We keep a persistent canvas/loop.
-  // The only time we might want full cleanup is a hard reload/unload.
+  // Listen for .no-anim class changes on <html>
+  ctrl.htmlObserver = new MutationObserver(() => ensureRunning());
+  ctrl.htmlObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
+
+  // Keep responsive
   window.addEventListener("beforeunload", () => {
     try {
       stop();
       ctrl.resizeObs?.disconnect();
+      ctrl.htmlObserver?.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
       try {
-        mql.removeEventListener?.("change", onTheme);
+        ctrl.mql?.removeEventListener?.("change", mqlHandler);
       } catch {
-        mql.removeListener?.(onTheme);
+        ctrl.mql?.removeListener?.(mqlHandler);
       }
-      // Leave canvas in DOM; browser will clear it on unload anyway.
     } catch {
       /* ignore */
     }
   });
 
   // Kick it off
-  start();
+  ensureRunning();
 
   return ctrl;
 }

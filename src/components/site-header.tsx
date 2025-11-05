@@ -14,6 +14,7 @@ const NAV = [
 export default function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [paused, setPaused] = useState(false);
 
   /* ---------------- Theme persistence ---------------- */
   useEffect(() => {
@@ -30,6 +31,23 @@ export default function SiteHeader() {
     localStorage.setItem("theme", next);
     document.documentElement.classList.toggle("dark", next === "dark");
   };
+
+  /* ---------------- Animation pause (a11y) ---------------- */
+  // Initialize from localStorage OR prefers-reduced-motion
+  useEffect(() => {
+    const stored = localStorage.getItem("animPaused");
+    const m = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+    const shouldPause = stored === "true" || m?.matches || false;
+    setPaused(!!shouldPause);
+  }, []);
+
+  // Apply/remove .no-anim on <html>
+  useEffect(() => {
+    const el = document.documentElement;
+    if (paused) el.classList.add("no-anim");
+    else el.classList.remove("no-anim");
+    localStorage.setItem("animPaused", String(paused));
+  }, [paused]);
 
   /* ---------------- Menu behavior ---------------- */
   useEffect(() => {
@@ -76,11 +94,24 @@ export default function SiteHeader() {
               {n.label}
             </Link>
           ))}
+
+          {/* Pause animations toggle (a11y) */}
+          <button
+            type="button"
+            onClick={() => setPaused((p) => !p)}
+            aria-pressed={paused}
+            aria-label={paused ? "Resume animations" : "Pause animations"}
+            title={paused ? "Resume animations" : "Pause animations"}
+            className="ml-3 flex h-8 items-center justify-center rounded-lg border border-brand px-3 text-sm hover:bg-muted focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600/60"
+          >
+            {paused ? "Play animations" : "Pause animations"}
+          </button>
+
           {/* Theme toggle */}
           <button
             onClick={toggleTheme}
             aria-label="Toggle dark mode"
-            className="ml-3 flex h-8 w-8 items-center justify-center rounded-lg border border-brand hover:bg-muted transition-colors"
+            className="ml-2 flex h-8 w-8 items-center justify-center rounded-lg border border-brand hover:bg-muted transition-colors"
           >
             {theme === "dark" ? (
               <span className="text-lg" role="img" aria-label="Light mode">
@@ -94,8 +125,19 @@ export default function SiteHeader() {
           </button>
         </nav>
 
-        {/* Mobile controls: theme + menu */}
+        {/* Mobile controls: pause + theme + menu */}
         <div className="flex items-center gap-2 md:hidden">
+          <button
+            type="button"
+            onClick={() => setPaused((p) => !p)}
+            aria-pressed={paused}
+            aria-label={paused ? "Resume animations" : "Pause animations"}
+            title={paused ? "Resume animations" : "Pause animations"}
+            className="flex h-9 items-center justify-center rounded-lg border border-brand px-3 text-sm hover:bg-muted focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600/60"
+          >
+            {paused ? "Play" : "Pause"}
+          </button>
+
           <button
             onClick={toggleTheme}
             aria-label="Toggle dark mode"

@@ -13,10 +13,11 @@ export const metadata = { title: "Publications — Daksh K. Singh" };
 function groupAndSort(items: Publication[]) {
   const byType: Record<string, Publication[]> = {
     journal: [],
-    conference: [], // includes conference papers + proceedings
+    conference: [], // combined: conference papers + proceedings
     patent: [],
   };
   for (const it of items) (byType[it.type] ??= []).push(it);
+
   const sortDesc = (a: Publication, b: Publication) => (b.year ?? 0) - (a.year ?? 0);
   Object.keys(byType).forEach((k) => byType[k].sort(sortDesc));
   return byType;
@@ -49,63 +50,69 @@ export default function PublicationsPage() {
 
         {/* Journal Articles */}
         {journal.length > 0 && (
-          <>
+          <section aria-labelledby="journal-heading" className="mt-8">
             <Reveal as="div">
-              <h2 className="mt-8 text-2xl">Journal Articles</h2>
+              <h2 id="journal-heading" className="text-2xl">Journal Articles</h2>
             </Reveal>
-            <div className="mt-4 grid gap-4">
+            <div className="mt-4 grid gap-4 not-prose">
               {journal.map((pub, i) => (
                 <Reveal key={`j-${i}`}>
                   <PublicationCard {...pub} />
                 </Reveal>
               ))}
             </div>
-          </>
+          </section>
         )}
 
         {/* Conference Papers & Proceedings (combined) */}
         {conference.length > 0 && (
-          <>
+          <section aria-labelledby="conf-heading" className="mt-10">
             <Reveal as="div">
-              <h2 className="mt-10 text-2xl">Conference Papers &amp; Proceedings</h2>
+              <h2 id="conf-heading" className="text-2xl">Conference Papers &amp; Proceedings</h2>
             </Reveal>
-            <div className="mt-4 grid gap-4">
+            <div className="mt-4 grid gap-4 not-prose">
               {conference.map((pub, i) => (
                 <Reveal key={`c-${i}`}>
                   <PublicationCard {...pub} />
                 </Reveal>
               ))}
             </div>
-          </>
+          </section>
         )}
 
         {/* Patents */}
         {patent.length > 0 && (
-          <>
+          <section aria-labelledby="patent-heading" className="mt-10">
             <Reveal as="div">
-              <h2 className="mt-10 text-2xl">Patents</h2>
+              <h2 id="patent-heading" className="text-2xl">Patents</h2>
             </Reveal>
-            <div className="mt-4 grid gap-4">
+            <div className="mt-4 grid gap-4 not-prose">
               {patent.map((pub, i) => (
                 <Reveal key={`p-${i}`}>
                   <PublicationCard {...pub} />
                 </Reveal>
               ))}
             </div>
-          </>
+          </section>
         )}
 
         {/* In the News (venue-importance ordering via rank) */}
-        <Reveal as="div">
-          <h2 className="mt-10 text-2xl">In the News</h2>
-        </Reveal>
-        <div className="mt-4 grid gap-4">
-          {[...news].sort((a, b) => a.rank - b.rank).map((item, i) => (
-            <Reveal key={`n-${i}`}>
-              <NewsCard {...item} />
+        {news.length > 0 && (
+          <section aria-labelledby="news-heading" className="mt-10">
+            <Reveal as="div">
+              <h2 id="news-heading" className="text-2xl">In the News</h2>
             </Reveal>
-          ))}
-        </div>
+            <div className="mt-4 grid gap-4 not-prose">
+              {[...news]
+                .sort((a, b) => a.rank - b.rank)
+                .map((item, i) => (
+                  <Reveal key={`n-${i}`}>
+                    <NewsCard {...item} />
+                  </Reveal>
+                ))}
+            </div>
+          </section>
+        )}
       </main>
       <SiteFooter />
     </>
