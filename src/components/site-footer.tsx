@@ -8,6 +8,9 @@ export default function SiteFooter() {
         <p className="text-xs text-muted-foreground">
           © {new Date().getFullYear()} Daksh K. Singh. Built with Next.js & Tailwind. All rights reserved.
         </p>
+        <Link href="/sitemap" className="underline underline-offset-4 hover:text-[rgb(var(--p-gold))]">
+          Site Map
+        </Link>
       </div>
     </footer>
   );
