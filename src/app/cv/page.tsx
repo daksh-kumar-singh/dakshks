@@ -3,12 +3,10 @@ import SiteFooter from "@/components/site-footer";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import Particles from "@/components/Particles";
-import TagList from "@/components/TagList";
 
 export const metadata = { title: "CV — Daksh K. Singh" };
 
 export default function CVPage() {
-  // unified bullet styling (light/dark markers, outside bullets)
   const ulCls =
     "list-disc list-outside pl-5 marker:text-[rgb(var(--p-rush))] dark:marker:text-[rgb(var(--p-gold))]";
 
@@ -16,7 +14,7 @@ export default function CVPage() {
     <>
       <SiteHeader />
       <main className="relative mx-auto max-w-3xl px-4 py-12 prose dark:prose-invert overflow-x-hidden overflow-clip">
-        {/* Side quantum/molecule effects (particles) */}
+        {/* Side effects */}
         <div className="pointer-events-none absolute left-[-16px] top-0 h-full w-16 md:left-[-40px] md:w-32 -z-10">
           <Particles />
         </div>
@@ -24,47 +22,47 @@ export default function CVPage() {
           <Particles />
         </div>
 
-        {/* Title */}
         <Reveal as="div">
           <h1>Curriculum Vitae</h1>
         </Reveal>
+
+        {/* Descriptive, same-tab link (avoids AAA target=_blank warning) */}
         <p>
           <Reveal as="span">
-            <Link href="/cv/Daksh_Singh_CV.pdf">Download PDF</Link>
+            <Link href="/cv/Daksh_Singh_CV.pdf" download className="underline underline-offset-4">
+              Download CV (PDF)
+            </Link>
           </Reveal>
         </p>
 
         {/* =========================
-            EDUCATION
+            EDUCATION (item-by-item)
            ========================= */}
         <section>
           <Reveal as="div">
             <h2>Education</h2>
           </Reveal>
-          <TagList
-            items={[
-              <>
+          <ul className={ulCls}>
+            <li>
+              <Reveal as="span">
                 <strong>Purdue University</strong> — MSECE (May 2027); primary area:{" "}
                 <strong>Fields &amp; Optics</strong>; related area:{" "}
                 <strong>Microelectronics &amp; Nanotechnology</strong>; concentrations:{" "}
                 <strong>Microelectronics &amp; Advanced Semiconductors</strong>.
-              </>,
-              <>
+              </Reveal>
+            </li>
+            <li>
+              <Reveal as="span">
                 <strong>Purdue University</strong> — BSEE (Dec 2025); concentrations:{" "}
                 <strong>Quantum Technologies</strong>, <strong>Wireless/Optical Engineering</strong>,{" "}
                 <strong>Microelectronics &amp; Semiconductors</strong>.
-              </>,
-            ]}
-            className={ulCls}
-            itemClassName=""
-            delayStep={40}
-            once
-            ariaLabel="Education list"
-          />
+              </Reveal>
+            </li>
+          </ul>
         </section>
 
         {/* =================================
-            PUBLICATIONS & PATENTS
+            PUBLICATIONS & PATENTS (per item)
            ================================= */}
         <section>
           <Reveal as="div">
@@ -74,19 +72,17 @@ export default function CVPage() {
           <Reveal as="div">
             <h3>Publications</h3>
           </Reveal>
-          <TagList
-            className={ulCls}
-            delayStep={40}
-            once
-            ariaLabel="Publications list"
-            items={[
-              <>
+          <ul className={ulCls}>
+            <li>
+              <Reveal as="span">
                 <strong>Singh, D.K.</strong>, Wilson, B., Chen, Y., Ojha, R., Bezick, M., Boltasseva, A., Shalaev,
                 V.M., Kildishev, A.V. (2025). Machine Learning Framework for Semiconductor Chips Anti-Counterfeiting
                 Using a Plasmonic Physically Unclonable Function. <em>Frontiers in Optics + Laser Science 2025</em>.{" "}
                 <em>[Accepted Contribution]</em>
-              </>,
-              <>
+              </Reveal>
+            </li>
+            <li>
+              <Reveal as="span">
                 Chen, Y., McNeil, A.M., Park, T., Wilson, B., Iyer, V., Bezick, M., Choi, J., Ojha, R., Mahendran, P.,{" "}
                 <strong>Singh, D.K.</strong>, Chitturi, G., Chen, P., Do, T., Satuloori, V., Kildishev, A.V., Shalaev,
                 V.M., Moebius, M., Cai, W., Liu, Y., Boltasseva, A. (2025). Machine-Learning-Assisted Photonic Device
@@ -94,81 +90,77 @@ export default function CVPage() {
                 <a href="https://doi.org/10.1515/nanoph-2025-0049" target="_blank" rel="noopener noreferrer">
                   https://doi.org/10.1515/nanoph-2025-0049
                 </a>
-              </>,
-              <>
+              </Reveal>
+            </li>
+            <li>
+              <Reveal as="span">
                 Wilson, B., Chen, Y., <strong>Singh, D. K.</strong>, Ojha, R., Bezick, M., Pott, J., Shalaev, V. M.,
-                Boltasseva, A., &amp; Kildishev, A. V. (2024). Machine-learning-assisted optical authentication of
-                chip tampering. <em>Photonic Computing: From Materials and Devices to Systems and Applications</em>,
-                16.{" "}
+                Boltasseva, A., &amp; Kildishev, A. V. (2024). Machine-learning-assisted optical authentication of chip
+                tampering. <em>Photonic Computing: From Materials and Devices to Systems and Applications</em>, 16.{" "}
                 <a href="https://doi.org/10.1117/12.3027858" target="_blank" rel="noopener noreferrer">
                   https://doi.org/10.1117/12.3027858
                 </a>
-              </>,
-              <>
+              </Reveal>
+            </li>
+            <li>
+              <Reveal as="span">
                 Wilson, B., Chen, Y., <strong>Singh, D. K.</strong>, Ojha, R., Pottle, J., Bezick, M., Boltasseva, A.,
                 Shalaev, V. M., &amp; Kildishev, A. V. (2024). Authentication through residual attention-based
                 processing of tampered optical responses. <em>Advanced Photonics</em>, 6(05).{" "}
                 <a href="https://doi.org/10.1117/1.ap.6.5.056002" target="_blank" rel="noopener noreferrer">
                   https://doi.org/10.1117/1.ap.6.5.056002
                 </a>
-              </>,
-            ]}
-          />
+              </Reveal>
+            </li>
+          </ul>
 
           <Reveal as="div">
             <h3>Patents</h3>
           </Reveal>
-          <TagList
-            className={ulCls}
-            delayStep={40}
-            once
-            ariaLabel="Patents list"
-            items={[
-              <>
+          <ul className={ulCls}>
+            <li>
+              <Reveal as="span">
                 First Inventor: <strong>Kildishev, Alexander V.</strong>; Co-Inventors:{" "}
                 <strong>Singh, Daksh Kumar</strong>; Wilson, Blake A.; Chen, Yuheng; Ojha, Rohan; Pottle, Jaxon;
                 Bezick, Michael; Boltasseva, Alexandra; Shalaev, Vladimir M. (2024).{" "}
                 <em>ML Assisted Authentication via Tampered Optical Responses</em>. Application No. 19/233,515, filed
                 June 10, 2025. <strong>Patent Pending</strong>.
-              </>,
-            ]}
-          />
+              </Reveal>
+            </li>
+          </ul>
 
           <Reveal as="div">
             <h3>Conference Presentations</h3>
           </Reveal>
-          <TagList
-            className={ulCls}
-            delayStep={40}
-            once
-            ariaLabel="Conference presentations list"
-            items={[
-              <>
+          <ul className={ulCls}>
+            <li>
+              <Reveal as="span">
                 <strong>Singh, D. K.</strong>, Ojha, R.; Co-Authors: Chen, Y., Wilson, B., Shalaev, V., Boltasseva, A.,
                 Kildishev, A. (2023). Machine Learning Assisted Realization of PUFs with Random Plasmonic Systems.{" "}
                 <em>Cyberinfrastructure Symposium, RCAC</em>, West Lafayette, IN.
-              </>,
-              <>
+              </Reveal>
+            </li>
+            <li>
+              <Reveal as="span">
                 <strong>Singh, D. K.</strong>, Chen, Y.; Authors: Kudyshev, Z., Bogdanov, S., Isacsson, T., Kildishev,
                 A., Boltasseva, A., Shalaev, V. (2023). Rapid Classification of Quantum Sources Enabled by Machine
                 Learning. <em>Quantum Science Center All-Hands Meeting</em>, Nashville, TN.
-              </>,
-            ]}
-          />
+              </Reveal>
+            </li>
+          </ul>
         </section>
 
         {/* =============================
-            RESEARCH EXPERIENCE (kept nested lists as-is)
+            RESEARCH EXPERIENCE (per li)
            ============================= */}
         <section>
           <Reveal as="div">
             <h2>Research Experience</h2>
           </Reveal>
 
-          <div className="space-y-6">
-            {/* Role 1 */}
-            <div>
-              <Reveal as="div">
+          <ul className={`${ulCls} space-y-6`}>
+            <li>
+              <Reveal as="span">
                 <>
                   <strong>Undergraduate Research Assistant</strong>
                   <br />
@@ -180,6 +172,7 @@ export default function CVPage() {
                   <strong>Dates:</strong> January 2023 – Present
                 </>
               </Reveal>
+
               <ul className={ulCls + " mt-2 space-y-1"}>
                 <li>
                   <Reveal as="span">
@@ -201,11 +194,10 @@ export default function CVPage() {
                   </Reveal>
                 </li>
               </ul>
-            </div>
+            </li>
 
-            {/* Role 2 */}
-            <div>
-              <Reveal as="div">
+            <li>
+              <Reveal as="span">
                 <>
                   <strong>Summer 2025 Research</strong>
                   <br />
@@ -239,11 +231,10 @@ export default function CVPage() {
                   </Reveal>
                 </li>
               </ul>
-            </div>
+            </li>
 
-            {/* Role 3 */}
-            <div>
-              <Reveal as="div">
+            <li>
+              <Reveal as="span">
                 <>
                   <strong>Summer 2024 Research</strong>
                   <br />
@@ -272,11 +263,10 @@ export default function CVPage() {
                   </Reveal>
                 </li>
               </ul>
-            </div>
+            </li>
 
-            {/* Role 4 */}
-            <div>
-              <Reveal as="div">
+            <li>
+              <Reveal as="span">
                 <>
                   <strong>Summer Undergraduate Research Fellow (SURF)</strong>
                   <br />
@@ -321,11 +311,10 @@ export default function CVPage() {
                   <Reveal as="span">Integrated optical components, detectors, and software into a functional platform.</Reveal>
                 </li>
               </ul>
-            </div>
+            </li>
 
-            {/* Role 5 */}
-            <div>
-              <Reveal as="div">
+            <li>
+              <Reveal as="span">
                 <>
                   <strong>First-Time Researcher Fellow</strong>
                   <br />
@@ -348,85 +337,79 @@ export default function CVPage() {
                   </Reveal>
                 </li>
               </ul>
-            </div>
-          </div>
+            </li>
+          </ul>
         </section>
 
         {/* ===========
-            SKILLS
+            SKILLS (per li)
            =========== */}
         <section>
           <Reveal as="div">
             <h2>Skills</h2>
           </Reveal>
-          <TagList
-            className={ulCls}
-            delayStep={30}
-            once
-            ariaLabel="Skills list"
-            items={[
-              <>
+          <ul className={ulCls}>
+            <li>
+              <Reveal as="span">
                 <strong>Fabrication &amp; Processing:</strong> E-beam lithography, photolithography, pulsed laser
                 deposition (PLD), metal evaporation &amp; sputtering, CVD, 2D material exfoliation &amp; transfer.
-              </>,
-              <>
+              </Reveal>
+            </li>
+            <li>
+              <Reveal as="span">
                 <strong>Characterization &amp; Assembly:</strong> Ellipsometry (VASE), dark-field microscopy, SEM, AFM,
                 photoluminescence (PL), g2 correlation, optical alignment, lens/mirror system integration.
-              </>,
-              <>
+              </Reveal>
+            </li>
+            <li>
+              <Reveal as="span">
                 <strong>Simulation &amp; Computation:</strong> Ansys Lumerical FDTD, Ansys HFSS, Tidy3D FDTD, RCWA
                 (GRCWA/S4), KiCad, LTspice, MATLAB, Python (ML/AI), HDL (Verilog/SystemVerilog), QICK, Qiskit.
-              </>,
-              <>
+              </Reveal>
+            </li>
+            <li>
+              <Reveal as="span">
                 <strong>Soft Skills:</strong> Leadership, communication, documentation, time management, teamwork.
-              </>,
-              <>
+              </Reveal>
+            </li>
+            <li>
+              <Reveal as="span">
                 <strong>Languages:</strong> English (Native/Bilingual), Hindi (Native/Bilingual).
-              </>,
-            ]}
-          />
+              </Reveal>
+            </li>
+          </ul>
         </section>
 
         {/* ============================
-            HONORS & AFFILIATIONS
+            HONORS & AFFILIATIONS (per li)
            ============================ */}
         <section>
           <Reveal as="div">
             <h2>Honors &amp; Fellowships</h2>
           </Reveal>
-          <TagList
-            className={ulCls}
-            delayStep={30}
-            once
-            ariaLabel="Honors and fellowships list"
-            items={[
-              <><strong>Dean’s List</strong> — 6/6 semesters (Fall 2022 – Spring 2025)</>,
-              <><strong>Semester Honors</strong> — 5/6 semesters</>,
-              <><strong>Summer Undergraduate Research Fellowship (SURF)</strong> — Summer 2023</>,
-              <><strong>Best Poster Presentation</strong> — Purdue Summer Research Symposium (Aug 2023)</>,
-              <><strong>First-Time Researcher Fellowship</strong> — Jan 2023</>,
-            ]}
-          />
+          <ul className={ulCls}>
+            <li><Reveal as="span"><strong>Dean’s List</strong> — 6/6 semesters (Fall 2022 – Spring 2025)</Reveal></li>
+            <li><Reveal as="span"><strong>Semester Honors</strong> — 5/6 semesters</Reveal></li>
+            <li><Reveal as="span"><strong>Summer Undergraduate Research Fellowship (SURF)</strong> — Summer 2023</Reveal></li>
+            <li><Reveal as="span"><strong>Best Poster Presentation</strong> — Purdue Summer Research Symposium (Aug 2023)</Reveal></li>
+            <li><Reveal as="span"><strong>First-Time Researcher Fellowship</strong> — Jan 2023</Reveal></li>
+          </ul>
         </section>
 
         <section>
           <Reveal as="div">
             <h2>Professional Affiliations</h2>
           </Reveal>
-          <TagList
-            className={ulCls}
-            delayStep={30}
-            once
-            ariaLabel="Professional affiliations list"
-            items={[
-              <><strong>Optica</strong> (Purdue University Chapter) — Treasurer</>,
-              <><strong>DOE Quantum Science Center</strong> (QSC)</>,
-              <><strong>Semiconductor Student Alliance</strong> — Purdue Chapter</>,
-              <>
+          <ul className={ulCls}>
+            <li><Reveal as="span"><strong>Optica</strong> (Purdue University Chapter) — Treasurer</Reveal></li>
+            <li><Reveal as="span"><strong>DOE Quantum Science Center</strong> (QSC)</Reveal></li>
+            <li><Reveal as="span"><strong>Semiconductor Student Alliance</strong> — Purdue Chapter</Reveal></li>
+            <li>
+              <Reveal as="span">
                 <strong>Collaborator:</strong> QuEra Computing Inc., Microsoft Azure Quantum, Quantinuum
-              </>,
-            ]}
-          />
+              </Reveal>
+            </li>
+          </ul>
         </section>
       </main>
       <SiteFooter />
