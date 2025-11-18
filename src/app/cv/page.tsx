@@ -53,7 +53,7 @@ export default function CVPage() {
             </li>
             <li>
               <Reveal as="span">
-                <strong>Purdue University</strong> — BSEE (Dec 2025); concentrations:{" "}
+                <strong>Purdue University</strong> - BSEE (Dec 2025); concentrations:{" "}
                 <strong>Quantum Technologies</strong>, <strong>Wireless/Optical Engineering</strong>,{" "}
                 <strong>Microelectronics &amp; Semiconductors</strong>.
               </Reveal>
@@ -176,9 +176,15 @@ export default function CVPage() {
               <ul className={ulCls + " mt-2 space-y-1"}>
                 <li>
                   <Reveal as="span">
-                    Contribute to ongoing research in <strong>nanofabrication</strong> and{" "}
-                    <strong>quantum photonics</strong>, focusing on the design, fabrication, and characterization of
+                    Contributing to ongoing research in <strong>nanophotonics</strong> and{" "}
+                    <strong>quantum optics</strong>, focusing on the design, fabrication, and characterization of
                     photonic devices.
+                  </Reveal>
+                </li>
+                <li>
+                  <Reveal as="span">
+                    Working on <strong> machine-learning for inverse photonics design</strong>,{" "}
+                    integrated photonics for quantum technologies, and <strong>quantum cryptography</strong> efforts.
                   </Reveal>
                 </li>
                 <li>
@@ -199,7 +205,7 @@ export default function CVPage() {
             <li>
               <Reveal as="span">
                 <>
-                  <strong>Summer 2025 Research</strong>
+                  <strong>2025 Research</strong>
                   <br />
                   <strong>Purdue University</strong>, West Lafayette, IN
                   <br />
@@ -209,13 +215,19 @@ export default function CVPage() {
               <ul className={ulCls + " mt-2 space-y-1"}>
                 <li>
                   <Reveal as="span">
+                    Worked on designing and simulating implementation of the <strong>BB84 quantum key distribution protocol</strong> using{" "}
+                    <strong>silicon nitride (SiN) photonics</strong> for <strong>single photon emission</strong>.
+                  </Reveal>
+                </li>
+                <li>
+                  <Reveal as="span">
                     Simulated <strong>nanostructured metasurfaces</strong> to enhance single-photon emission using 2D
                     materials such as <strong>graphene</strong> and <strong>WSe2</strong>.
                   </Reveal>
                 </li>
                 <li>
                   <Reveal as="span">
-                    Fabricated <strong>gold contacts</strong> for studying spin injection in monolayer{" "}
+                    Fabricated <strong>platinum (Pt) contacts</strong> for studying spin injection in monolayer{" "}
                     <strong>CrSBr</strong> flakes.
                   </Reveal>
                 </li>
@@ -224,19 +236,13 @@ export default function CVPage() {
                     Performed <strong>exfoliation</strong> and <strong>transfer</strong> of 2D CrSBr onto samples.
                   </Reveal>
                 </li>
-                <li>
-                  <Reveal as="span">
-                    Conducted <strong>optical characterization</strong> for emitter–cavity coupling, integrating
-                    fabrication with testing workflows.
-                  </Reveal>
-                </li>
               </ul>
             </li>
 
             <li>
               <Reveal as="span">
                 <>
-                  <strong>Summer 2024 Research</strong>
+                  <strong>2024 Research</strong>
                   <br />
                   <strong>Purdue University</strong>, West Lafayette, IN
                   <br />

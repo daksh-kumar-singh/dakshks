@@ -33,7 +33,7 @@
 /* Your gold (rgb(142 121 73)) is < 4.5:1 on white. Use a darker tone in LIGHT mode only. */
 :root {
   /* darker heading color only for light theme; keeps your brand vibe */
-  --heading-light: #5b4a23; /* ~7:1 on white for most sizes */
+  --heading-light: #966900; /* ~7:1 on white for most sizes */
 }
 
 /* If you’re using prose, nudge headings in LIGHT mode only */
@@ -81,8 +81,8 @@
   --foreground: 222.2 47.4% 11.2%;   /* Deep neutral text */
   --muted: 210 16% 96%;
   --muted-foreground: 215 16% 40%;
-  --p-gold: 142 121 73;              /* Muted gold (#8E6F3E) for light mode (RGB triplet) */
-  --p-rush: 142 121 73;              /* Accent in light mode (RGB triplet) */
+  --p-gold: 218 170 0;               /* Rush Gold (#DAAA00) — bright accent (RGB triplet) */
+  --p-rush: 218 170 0;               /* Same accent gold (RGB triplet) */
   --p-rail: 157 151 149;             /* Rail Gray (#9D9795) RGB */
   --p-steel: 85 89 96;               /* Steel Gray (#555960) RGB */
 }
