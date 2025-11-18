@@ -138,7 +138,7 @@ h1, h2, h3, h4 {
 
 /* Strong text (CV emphasis) — FIX: use rgb(), not hsl() */
 strong {
-  color: rgba(218, 170, 0, 0.85);    /* soft Rush Gold tint in light mode */
+  color: rgb(var(--p-rush));
   font-weight: 600;
 }
 
