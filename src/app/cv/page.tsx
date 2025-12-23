@@ -2,7 +2,6 @@ import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
-import Particles from "@/components/Particles";
 
 export const metadata = { title: "CV — Daksh K. Singh" };
 
@@ -14,14 +13,6 @@ export default function CVPage() {
     <>
       <SiteHeader />
       <main className="relative mx-auto max-w-3xl px-4 py-12 prose dark:prose-invert overflow-x-hidden overflow-clip">
-        {/* Side effects */}
-        <div className="pointer-events-none absolute left-[-16px] top-0 h-full w-16 md:left-[-40px] md:w-32 -z-10">
-          <Particles />
-        </div>
-        <div className="pointer-events-none absolute right-[-16px] top-0 h-full w-16 md:right-[-40px] md:w-32 -z-10">
-          <Particles />
-        </div>
-
         <Reveal as="div">
           <h1>Curriculum Vitae</h1>
         </Reveal>

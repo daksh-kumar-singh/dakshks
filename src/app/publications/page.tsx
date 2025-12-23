@@ -4,7 +4,6 @@ import PublicationCard from "@/components/publication-card";
 import { publications } from "@/data/publications";
 import type { Publication } from "@/data/publications";
 import Reveal from "@/components/Reveal";
-import Particles from "@/components/Particles";
 import NewsCard from "@/components/news-card";
 import { news } from "@/data/news";
 
@@ -30,13 +29,6 @@ export default function PublicationsPage() {
     <>
       <SiteHeader />
       <main className="relative mx-auto max-w-5xl px-4 py-12 overflow-x-hidden overflow-clip prose dark:prose-invert">
-        {/* Side quantum/molecule effects (particles) */}
-        <div className="pointer-events-none absolute left-[-16px] top-0 h-full w-16 md:left-[-40px] md:w-32 -z-10">
-          <Particles />
-        </div>
-        <div className="pointer-events-none absolute right-[-16px] top-0 h-full w-16 md:right-[-40px] md:w-32 -z-10">
-          <Particles />
-        </div>
 
         {/* Title */}
         <Reveal as="div">
