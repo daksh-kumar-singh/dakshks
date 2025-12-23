@@ -36,7 +36,7 @@ export default function CVPage() {
           <ul className={ulCls}>
             <li>
               <Reveal as="span">
-                <strong>Purdue University</strong> — MSECE (May 2027); primary area:{" "}
+                <strong>Purdue University</strong> — MSECE (Dec 2026); primary area:{" "}
                 <strong>Fields &amp; Optics</strong>; related area:{" "}
                 <strong>Microelectronics &amp; Nanotechnology</strong>; concentrations:{" "}
                 <strong>Microelectronics &amp; Advanced Semiconductors</strong>.
@@ -153,14 +153,14 @@ export default function CVPage() {
             <li>
               <Reveal as="span">
                 <>
-                  <strong>Undergraduate Research Assistant</strong>
+                  <strong>Graduate Research Assistant</strong>
                   <br />
                   <strong>Purdue University</strong>, West Lafayette, IN
                   <br />
                   <strong>Advisors:</strong> Prof. Alexandra Boltasseva, Prof. Vladimir Shalaev, Prof. Alexander
                   Kildishev
                   <br />
-                  <strong>Dates:</strong> January 2023 – Present
+                  <strong>Dates:</strong> January 2025 – Present
                 </>
               </Reveal>
 
@@ -180,7 +180,7 @@ export default function CVPage() {
                 </li>
                 <li>
                   <Reveal as="span">
-                    Develop cleanroom expertise in <strong>electron-beam lithography (EBL)</strong>,{" "}
+                    Developing cleanroom expertise in <strong>electron-beam lithography (EBL)</strong>,{" "}
                     <strong>thin-film deposition</strong>, and <strong>optical testing</strong> for novel metastructures.
                   </Reveal>
                 </li>
@@ -194,6 +194,18 @@ export default function CVPage() {
             </li>
 
             <li>
+              <Reveal as="span">
+                <>
+                  <strong>Undergraduate Research Assistant</strong>
+                  <br />
+                  <strong>Purdue University</strong>, West Lafayette, IN
+                  <br />
+                  <strong>Advisors:</strong> Prof. Alexandra Boltasseva, Prof. Vladimir Shalaev, Prof. Alexander
+                  Kildishev
+                  <br />
+                  <strong>Dates:</strong> January 2023 – January 2025
+                </>
+              </Reveal>
               <Reveal as="span">
                 <>
                   <strong>2025 Research</strong>
