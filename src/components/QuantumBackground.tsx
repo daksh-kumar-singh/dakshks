@@ -1,36 +1,34 @@
 "use client";
 
 /**
- * Composite background:
- * - Soft animated gold blobs (CSS)
- * - Film grain overlay (CSS data URL)
- * - Optional canvas particles
- * - Now clipped/contained to prevent mobile overflow
+ * Composite background (STATIC):
+ * - Soft static Purdue-colored particles
+ * - Film grain overlay
+ * - No animations, no JS loops
+ * - Fully accessibility-safe
  */
-import Particles from "./Particles";
 
 export default function QuantumBackground({
-  particles = true,
   className = "",
 }: {
-  particles?: boolean;
   className?: string;
 }) {
   return (
     <div
-      className={`pointer-events-none absolute inset-0 -z-10 overflow-clip md:overflow-visible [contain:paint] ${className}`}
+      className={`pointer-events-none absolute inset-0 -z-10 overflow-clip [contain:paint] ${className}`}
       aria-hidden="true"
     >
-      {/* Blobs */}
-      <div className="absolute inset-0 qb-blob qb-1" />
-      <div className="absolute inset-0 qb-blob qb-2" />
-      <div className="absolute inset-0 qb-blob qb-3" />
+      {/* Static particles */}
+      <div className="absolute inset-0">
+        <span className="static-particle sp-1" />
+        <span className="static-particle sp-2" />
+        <span className="static-particle sp-3" />
+        <span className="static-particle sp-4" />
+        <span className="static-particle sp-5" />
+      </div>
 
       {/* Film grain */}
       <div className="absolute inset-0 bg-noise opacity-[0.05]" />
-
-      {/* Particles */}
-      {particles ? <Particles /> : null}
     </div>
   );
 }

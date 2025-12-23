@@ -298,3 +298,53 @@ summary::marker {
     animation: none;
   }
 }
+
+/* =========================================
+   Static Background Particles (No Animation)
+   ========================================= */
+
+.static-particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  opacity: 0.25;
+  background-color: rgb(var(--p-rush));
+  filter: blur(1px);
+}
+
+/* Individual placements */
+.sp-1 {
+  top: 18%;
+  left: 12%;
+  background-color: rgb(var(--p-rush));
+}
+
+.sp-2 {
+  top: 42%;
+  left: 78%;
+  background-color: rgb(var(--p-aged));
+}
+
+.sp-3 {
+  top: 65%;
+  left: 22%;
+  background-color: rgb(var(--p-steel));
+}
+
+.sp-4 {
+  top: 30%;
+  left: 55%;
+  background-color: rgb(var(--p-field));
+}
+
+.sp-5 {
+  top: 75%;
+  left: 85%;
+  background-color: rgb(var(--p-rail));
+}
+
+/* Dark mode tuning */
+.dark .static-particle {
+  opacity: 0.35;
+}
