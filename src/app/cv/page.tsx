@@ -400,11 +400,12 @@ export default function CVPage() {
             <h2>Honors &amp; Fellowships</h2>
           </Reveal>
           <ul className={ulCls}>
+            <li><Reveal as="span"><strong>First Place</strong> — Purdue ECE SPARK Challenge (Fall 2025)</Reveal></li>
             <li><Reveal as="span"><strong>Dean’s List</strong> — 7/7 semesters (Fall 2022 – Fall 2025)</Reveal></li>
             <li><Reveal as="span"><strong>Semester Honors</strong> — 6/7 semesters</Reveal></li>
-            <li><Reveal as="span"><strong>Summer Undergraduate Research Fellowship (SURF)</strong> — Summer 2023</Reveal></li>
+            <li><Reveal as="span"><strong>Summer Undergraduate Research Fellowship (SURF)</strong> (Summer 2023)</Reveal></li>
             <li><Reveal as="span"><strong>Best Poster Presentation</strong> — Purdue Summer Research Symposium (Aug 2023)</Reveal></li>
-            <li><Reveal as="span"><strong>First-Time Researcher Fellowship</strong> — Jan 2023</Reveal></li>
+            <li><Reveal as="span"><strong>First-Time Researcher Fellowship</strong> (Jan 2023)</Reveal></li>
           </ul>
         </section>
 
