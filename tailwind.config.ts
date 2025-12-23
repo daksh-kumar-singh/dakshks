@@ -9,19 +9,27 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        muted: "hsl(var(--muted))",
-        "muted-foreground": "hsl(var(--muted-foreground))",
+        background: "rgb(var(--background))",
+        foreground: "rgb(var(--foreground))",
+
+        muted: "rgb(var(--muted))",
+        "muted-foreground": "rgb(var(--muted-foreground))",
+
+        border: "rgb(var(--border))",
+
+        accent: "rgb(var(--accent))",
+        "accent-soft": "rgb(var(--accent-soft))",
+
+        link: "rgb(var(--link))",
+        "link-hover": "rgb(var(--link-hover))",
       },
       borderRadius: {
         xl: "1rem",
         "2xl": "1.25rem",
-      }
+      },
     },
   },
-  plugins: [
-    require("@tailwindcss/typography"),
-  ],
+  plugins: [require("@tailwindcss/typography")],
 };
+
 export default config;
