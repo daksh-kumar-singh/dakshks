@@ -2,7 +2,6 @@ import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import { researchItems } from "@/data/research";
 import Reveal from "@/components/Reveal";
-import Particles from "@/components/Particles";
 
 export const metadata = { title: "Research Projects — Daksh K. Singh" };
 
